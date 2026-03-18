@@ -1,0 +1,2385 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ thống Luyện thi Tiếng Anh</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Tùy chỉnh thanh cuộn */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .drag-over { border-color: #3b82f6 !important; background-color: #eff6ff !important; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 overflow-hidden">
+    <div id="root" class="min-h-screen flex h-screen"></div>
+
+    <script>
+        // ==========================================
+        // 1. DỮ LIỆU BÀI TẬP (DATA)
+        // ==========================================
+        // TOÀN BỘ 229 CÂU HỎI LISTENING
+        const rawDataPart1 = `
+Câu 1: When does the meeting start?
+A. 10:00 ( ✓  Đáp án đúng)
+B. 10:15
+C. 11:15
+Câu 2: Why did David call peter?
+Đáp án: To suggest drink
+Câu 3: (gọi mẹ ra sân bay đón vì not well)
+Đáp án: Sick
+Câu 4: What do Anne need?
+Đáp án: Egg
+Câu 5: What time are they going to meet?
+A. 9:00
+B. 10:00 ( ✓  Đáp án đúng)
+C. 9:30
+Câu 6: What does Anna do later in the afternoon?
+A. Hang out with friends
+B. Stay late at the office ( ✓  Đáp án đúng)
+C. Pick up her kids
+Câu 7: What film did she recommend?
+A. A comedy
+B. A romantic film
+C. An action film ( ✓  Đáp án đúng)
+Câu 8: Where are the students now?
+A. At school
+B. In a townhouse ( ✓  Đáp án đúng)
+C. In a museum
+Câu 9: How does he go to work?
+A. By bus ( ✓  Đáp án đúng)
+B. By bike
+C. On foot
+Câu 10: What time is the best for children to eat fruit?
+A. In the evening
+B. In the afternoon
+C. In the morning ( ✓  Đáp án đúng)
+Câu 11: Why do women get up early?
+A. Have some quiet time ( ✓  Đáp án đúng)
+B. to go to work early
+C. to take care of children
+Câu 12: Why does he need to learn to drive a car?
+A. He lost his driving license.
+B. He has to drive to work ( ✓  Đáp án đúng)
+C. He bought a new car.
+Câu 13: What did they both buy?
+A. Clothes ( ✓  Đáp án đúng)
+B. Tea
+C. Cakes
+Câu 14: What color is the teacher's building?
+Đáp án: White
+Câu 15: Where will Luis meet Standar?
+A. Outside the station ( ✓  Đáp án đúng)
+B. At the cafe
+C. Near the ticket counter
+Câu 16: What time do they meet?
+Đáp án: 7.30
+Câu 17: What day do they walk?
+Đáp án: Sunday
+Câu 18: What does she forget?
+Đáp án: watch
+Câu 19: Where is she going to go shopping?
+A. At the downtown market
+B. At a new shopping center ( ✓  Đáp án đúng)
+C. At the mall
+Câu 20: What color is the door of the house?
+Đáp án: blue
+Câu 21: What did he like when he studied at university?
+Đáp án: Group work
+Câu 22: How does the old teacher look like?
+Đáp án: black hair
+Câu 23: How long is the assignment ?
+Đáp án: 15 pages
+Câu 24: Why was the tour canceled?
+A. Not enough people ( ✓  Đáp án đúng)
+B. Bad weather
+C. Transportation problems
+Câu 25: What award does the film win?
+Đáp án: photography
+Câu 26: What can we do on the top floor of the hotel?
+Đáp án: Do exercise
+Câu 27: What did she lose?
+A. A necklace
+B. A bag ( ✓  Đáp án đúng)
+C. A wallet
+Câu 28: What is not working?
+Đáp án: Computer
+Câu 29: What time are they going to meet?
+A. 4.00
+B. 5.30 ( ✓  Đáp án đúng)
+C. 6.00
+Câu 30: How much is the cheapest computer in the shop?
+A. 135 pounds ( ✓  Đáp án đúng)
+B. 145 pounds
+C. 155 pounds
+Câu 31: What is Mary's number ?
+Đáp án: 5553920
+Câu 32: How many pages of the assignment?
+Đáp án: Four
+Câu 33: What is the woman doing?
+Đáp án: Cleaning
+Câu 34: What are they going to do on this holiday?
+Đáp án: Teaching
+Câu 35: What is this building currently used for?
+A. A museum
+B. A department store ( ✓  Đáp án đúng)
+C. A cinema
+Câu 36: How much is the coffee?
+Đáp án: 4.99
+Câu 37: What is the main change the managers are going to make?
+Đáp án: Adjust the schedule
+Câu 38: Which traffic does he get?
+Đáp án: train
+Câu 39: Outfit of girl
+Đáp án: shirt
+Câu 40: Where does Anna go for a walk every morning?
+A. park
+B. neighborhood
+C. college ( ✓  Đáp án đúng)
+Câu 41: How many seats does she need?
+A. 12
+B. 15
+C. 20 ( ✓  Đáp án đúng)
+Câu 42: What did she forget, and where did she leave it?
+Đáp án: In the corner
+Câu 43: Where did they meet?
+Đáp án: The front entrance
+Câu 44: What did she buy?
+A. A dress ( ✓  Đáp án đúng)
+B. A blouse
+C. A hat
+Câu 45: What is the teacher preparing for the meeting now?
+A. Set up the chairs
+B. Organize the documents
+C. Order the food ( ✓  Đáp án đúng)
+Câu 46: When will she need a computer?
+A. Tuesday
+B. Friday ( ✓  Đáp án đúng)
+C. Saturday
+Câu 47: What country will they study next semester?
+Đáp án: France
+Câu 48: What is she going to change in their house?
+A. The window ( ✓  Đáp án đúng)
+B. The car
+C. The computer
+Câu 49: What does the actor like to do in his free time?
+A. Drawing ( ✓  Đáp án đúng)
+B. Watching movies
+C. Playing sports
+Câu 50: What new facility will the school have?
+A. a new library
+B. a sports field
+C. the performance space ( ✓  Đáp án đúng)
+Câu 51: What does he like in Dubai?
+A. He enjoy the food there
+B. He enjoys his job there ( ✓  Đáp án đúng)
+C. He enjoys the people there
+Câu 52: What shouldn’t they do?
+A. Spend too much on clothes.
+B. Ask for more money . ( ✓  Đáp án đúng)
+C. Save for emergencies.
+Câu 53: Why did the wife come home late?
+Đáp án: No car
+Câu 54: What did he feed the cat?
+Đáp án: Fish
+Câu 55: (phone number)
+Đáp án: .....457
+Câu 56: (how much)
+Đáp án: Thirty pounds
+Câu 57: What's the direction of the supermarket?
+Đáp án: The North
+Câu 58: How long does it take to get to the station?
+A. 30 minutes
+B. 40 minutes ( ✓  Đáp án đúng)
+C. 50 minutes
+Câu 59: How will the concert end?
+A. The city’s favorite group ( ✓  Đáp án đúng)
+B. Fireworks performance
+C. Singing from orchestra
+Câu 60: What did he do in the morning?
+Đáp án: Look at the view
+Câu 61: What is the woman going to do?
+A. Have coffee ( ✓  Đáp án đúng)
+B. Have lunch
+C. Drink tea
+Câu 62: When does the train leave?
+A. At 9:15 ( ✓  Đáp án đúng)
+B. At 9.30
+C. At 9.45
+Câu 63: (what time the man work)
+Đáp án: 12 o’clock
+Câu 64: What did they both buy?
+Đáp án: trousers
+Câu 65: What is the main reason he gets late?
+A. Overslept
+B. Forgot something
+C. Missed the train ( ✓  Đáp án đúng)
+Câu 66: What time does Ahmed meet Rose?
+A. half past seven
+B. quarter past seven
+C. quarter to eight ( ✓  Đáp án đúng)
+Câu 67: Where will they meet?
+A. At the marketplace ( ✓  Đáp án đúng)
+B. At the mall
+C. At the park
+Câu 68: How old is she?
+A. 21 ( ✓  Đáp án đúng)
+B. 20
+C. 22
+Câu 69: The football club is near:
+A. A grocery store
+B. A park ( ✓  Đáp án đúng)
+C. A library
+Câu 70: What does he feed the cat?
+A. Mice
+B. Insects
+C. Fish ( ✓  Đáp án đúng)
+Câu 71: What does this family do most weekends?
+A. Go for a walk
+B. Go picnic
+C. Go cycling ( ✓  Đáp án đúng)
+Câu 72: What does Jack need to buy for his sister?
+A. Chocolates ( ✓  Đáp án đúng)
+B. Milk
+C. Fruit
+Câu 73: What time did it depart?
+A. 9:00
+B. 9:30 ( ✓  Đáp án đúng)
+C. 10:00
+Câu 74: Where will the weather be best?
+A. In the south
+B. In the west
+C. In the east ( ✓  Đáp án đúng)
+Câu 75: Why was the museum visit canceled?
+Đáp án: not enough people
+Câu 76: Where is the Coffee shop located?
+A. opposite the gift shop ( ✓  Đáp án đúng)
+B. next to the gift shop
+C. behind the gift shop
+Câu 77: Where will tea be served?
+A. On the Mountain Boat
+B. On the River Boat ( ✓  Đáp án đúng)
+C. On the beach
+Câu 78: Which room is the largest?
+A. Bedroom
+B. Kitchen ( ✓  Đáp án đúng)
+C. Bathroom
+Câu 79: Why did he call his friend?
+Đáp án: to suggest to drink
+Câu 80: What day did two people meet?
+Đáp án: 9th Sunday
+Câu 81: What is Dress she wears like?
+A. black and white
+B. long and white
+C. long and red ( ✓  Đáp án đúng)
+Câu 82: When is the new appointment?
+A. On Thursday 13th ( ✓  Đáp án đúng)
+B. On Thursday 30th
+C. On Friday 14th
+Câu 83: Where will Luisa meet Sandra?
+Đáp án: outside the station
+Câu 84: What did she do last week?
+A. Went hiking
+B. Stayed at home ( ✓  Đáp án đúng)
+C. Attended a party
+Câu 85: How long does Nate stay in India?
+A. 3 days
+B. 1 week
+C. 2 weeks ( ✓  Đáp án đúng)
+Câu 86: Where is the office located?
+A. Next to the park
+B. Opposite the hotel ( ✓  Đáp án đúng)
+C. Above a restaurant
+Câu 87: Where will they wait for the bus?
+A. by the hotel's side entrance
+B. behind the hotel's main entrance
+C. by the hotel's main entrance ( ✓  Đáp án đúng)
+Câu 88: What does the man’s wife enjoy?
+Đáp án: photography
+Câu 89: What can people do in the afternoon?
+A. Join a dance class
+B. Play golf ( ✓  Đáp án đúng)
+C. Go shopping
+Câu 90: What is the last program before the end of the event?
+Đáp án: some special offers
+Câu 91: What is her first job?
+A. Teacher ( ✓  Đáp án đúng)
+B. Doctor
+C. Engineer
+Câu 92: How much can Max pay for the computer?
+A. 250 pounds ( ✓  Đáp án đúng)
+B. 150 pounds
+C. 350 pounds
+Câu 93: What will they bring to the picnic?
+A. Drinks
+B. Salads
+C. Food ( ✓  Đáp án đúng)
+Câu 94: What is the color of the teacher’s building/shirt?
+Đáp án: white
+Câu 95: What time does the football match start?
+Đáp án: 1p.m
+Câu 96: What does she do in the evening?
+A. Goes for a walk. ( ✓  Đáp án đúng)
+B. Plays video games.
+C. Cooks dinner.
+Câu 97: What did Anna say about George?
+A. he didn’t like her
+B. he taught her a lot ( ✓  Đáp án đúng)
+C. he was very strict
+Câu 98: What does the man want to do next?
+A. Become a writer ( ✓  Đáp án đúng)
+B. Become a chef again
+C. Start teaching history again
+Câu 99: What does the brother have to drink?
+A. Milk
+B. Medicine
+C. Water ( ✓  Đáp án đúng)
+Câu 100: What was the man's favorite thing about school?
+A. Math classes
+B. Geography classes
+C. History classes ( ✓  Đáp án đúng)
+Câu 101: What will she do?
+Đáp án: go for a drive
+Câu 102: What do mother and daughter have in common?
+A. Similar appearance
+B. Similar interests ( ✓  Đáp án đúng)
+C. Similar personalities
+Câu 103: What does he buy in the store?
+A. A T-shirt
+B. A suit for the office ( ✓  Đáp án đúng)
+C. A pair of shoes
+Câu 104: What do these birds do in winter?
+Đáp án: They stay in groups for protection
+Câu 105: What does she have for lunch?
+A. Tea ( ✓  Đáp án đúng)
+B. Coffee
+C. Juice
+Câu 106: How many people live in the town?
+A. 8,000
+B. 9,000
+C. 10,000 ( ✓  Đáp án đúng)
+Câu 107: Where does he live now?
+A. In a small village
+B. In an apartment
+C. In a town hall ( ✓  Đáp án đúng)
+Câu 108: Where is the main office?
+A. On the third floor
+B. On the first floor ( ✓  Đáp án đúng)
+C. In the basement
+Câu 109: How much does she think the bus fare will be?
+A. £2.5 ( ✓  Đáp án đúng)
+B. £3
+C. £4.5
+Câu 110: When is the meeting scheduled?
+A. Monday morning
+B. Friday evening
+C. Wednesday afternoon ( ✓  Đáp án đúng)
+Câu 111: Where do they meet?
+Đáp án: Coffee opposite the hotel
+Câu 112: Where will they meet?
+A. At home
+B. In the garden
+C. Outside the shop ( ✓  Đáp án đúng)
+Câu 113: What time does he usually eat?
+A. 6 o’clock
+B. 7 o’clock ( ✓  Đáp án đúng)
+C. 8 o'clock
+Câu 114: What does he do after work?
+A. Goes to the gym.
+B. Plays football. ( ✓  Đáp án đúng)
+C. Reads books.
+Câu 115: What elements of the film do they agree on?
+Đáp án: The ending
+Câu 116: Where are they standing?
+A. library complex
+B. university area
+C. Residential area ( ✓  Đáp án đúng)
+Câu 117: What is his main problem?
+A. Persuading his family ( ✓  Đáp án đúng)
+B. Finding a job abroad
+C. Saving money for the move
+Câu 118: How many new houses are going to be built?
+A. 2000 ( ✓  Đáp án đúng)
+B. 2500
+C. 1500
+Câu 119: When does she want to meet?
+A. Two o’clock
+B. Three o'clock ( ✓  Đáp án đúng)
+C. One o’clock
+Câu 120: What does the sister drink at the coffee shop?
+Đáp án: Tea
+Câu 121: What time will the friends meet?
+Đáp án: 6.30
+Câu 122: What does she usually do on Saturdays?
+A. Meeting a friend
+B. Going shopping
+C. Seeing her family ( ✓  Đáp án đúng)
+Câu 123: What did they both buy?
+Đáp án: Trousers
+Câu 124: What color top is he going to buy?
+A. Green
+B. Blue
+C. Black ( ✓  Đáp án đúng)
+Câu 125: When is the work due?
+A. On Thursday morning
+B. On Friday morning
+C. On Saturday morning ( ✓  Đáp án đúng)
+Câu 126: What does the professor ask his student to do?
+A. Speak at a conference ( ✓  Đáp án đúng)
+B. Write another thesis
+C. Tutor another student
+Câu 127: Where is she going next?
+A. The east
+B. The north
+C. The south ( ✓  Đáp án đúng)
+Câu 128: Which is the most attractive part of the song?
+A. The words ( ✓  Đáp án đúng)
+B. The instruments
+C. The cover art
+Câu 129: What did she like best about the film?
+A. Racing scenes
+B. Fight scenes
+C. The mountain scenes ( ✓  Đáp án đúng)
+Câu 130: What encouraged her to become a scientist?
+A. Her mother
+B. A large stone ( ✓  Đáp án đúng)
+C. The computer
+Câu 131: How much did she sell it for?
+A. 50 dollars ( ✓  Đáp án đúng)
+B. 60 dollars
+C. 40 dollars
+Câu 132: Where will they meet?
+A. At school
+B. By the park ( ✓  Đáp án đúng)
+C. In the cafe
+Câu 133: Where is he working now?
+A. At a university
+B. In a big company
+C. In a bank ( ✓  Đáp án đúng)
+Câu 134: What time does the movie begin?
+A. 6:40 am ( ✓  Đáp án đúng)
+B. 7:00
+C. 9:20
+Câu 135: What did he leave at the yard?
+Đáp án: Shoes
+Câu 136: Where did he find the key?
+A. In his car
+B. In the front door ( ✓  Đáp án đúng)
+C. In the bedroom
+Câu 137: How does the man usually go to work?
+Đáp án: By car
+Câu 138: Where should Dan turn right?
+A. At the Main Street
+B. At the hospital
+C. At the traffic lights ( ✓  Đáp án đúng)
+Câu 139: Which light shows that the computer is on?
+Đáp án: Blue
+Câu 140: Where did they go last year?
+Đáp án: Camping
+Câu 141: What is his opinion about that restaurant?
+Đáp án: The serve was slow
+Câu 142: What is his opinion about sea transport?
+Đáp án: The use of technology will increase
+Câu 143: Why did the students do the experiment on the tree?
+Đáp án: Measure the speed of the plant growth
+Câu 144: Where will the first computer science lesson take place?
+Đáp án: Room 301
+Câu 145: What time does the football match start?
+A. 11 p.m
+B. 1 p.m ( ✓  Đáp án đúng)
+C. 6 p.m
+Câu 146: What is the teleshop number?
+A. 102030
+B. 201030 ( ✓  Đáp án đúng)
+C. 301020
+Câu 147: Đồ 2 người bạn cần mang đi cắm trại?
+Đáp án: Food
+Câu 148: How many copies of Freeze Frame magazine were sold?
+A. Over 300,000 copies ( ✓  Đáp án đúng)
+B. Over 3,000 copies
+C. Over 30,000 copies
+Câu 149: Last holiday?
+Đáp án: Camping
+Câu 150: What do the man and woman decide to do in the evening?
+A. Make plans later ( ✓  Đáp án đúng)
+B. Go to the movie
+C. Stay at home
+Câu 151: What drink does the man choose?
+A. Milk tea
+B. Hot tea
+C. Iced tea ( ✓  Đáp án đúng)
+Câu 152: Who is she taking a photo of?
+A. The boys’ and the girls’ team
+B. The girls’ team ( ✓  Đáp án đúng)
+C. Sue and Lily
+Câu 153: Where do they go when they travel to India?
+Đáp án: Go to the park
+Câu 154: What will the weather be like?
+A. Cold and wet ( ✓  Đáp án đúng)
+B. Hot and sunny
+C. Warm and dry
+Câu 155: What did they decide to do?
+A. Having the meeting without him ( ✓  Đáp án đúng)
+B. Continue to waiting for him
+C. Cancel the meeting
+Câu 156: Which platform to wait for the train?
+A. Platform 2 ( ✓  Đáp án đúng)
+B. Platform 5
+C. Platform 8
+Câu 157: How does Even feel?
+A. Sick ( ✓  Đáp án đúng)
+B. Happy
+C. Tired
+Câu 158: Why does Douglas call Kay?
+A. ask for a favor
+B. suggest a meeting
+C. To say thank you ( ✓  Đáp án đúng)
+Câu 159: Who is visiting Tom this weekend?
+A. His mother and uncle
+B. His sister and children ( ✓  Đáp án đúng)
+C. His mother and sister
+Câu 160: When is lunch ready?
+A. 12:30 p.m
+B. 2:00 p.m ( ✓  Đáp án đúng)
+C. 1:15 p.m
+Câu 161: How much are the cleaning products?
+A. One pound fifty (1.50) ( ✓  Đáp án đúng)
+B. Two pounds fifty
+C. Three pounds fifty
+Câu 162: Where is she going on holiday?
+A. the cave
+B. the beach
+C. the mountains ( ✓  Đáp án đúng)
+Câu 163: What did he enjoy last year?
+A. Go cycling ( ✓  Đáp án đúng)
+B. Go for a walk
+C. Go picnic
+Câu 164: How long did he talk in the speech?
+A. 30 minutes
+B. 45 minutes
+C. 15 minutes ( ✓  Đáp án đúng)
+Câu 165: What is the relationship between the speaker and Lisa?
+A. Best friends ( ✓  Đáp án đúng)
+B. Mother and daughter
+C. Teacher and student
+Câu 166: Why does she want to become a writer?
+A. to earn much money
+B. to help people ( ✓  Đáp án đúng)
+C. to become famous
+Câu 167: Why is the air travel cancelled?
+A. Engine failure
+B. Poor weather conditions ( ✓  Đáp án đúng)
+C. Delay at transit spot
+Câu 168: What was his last job?
+A. An engineer
+B. A teacher
+C. An electrician ( ✓  Đáp án đúng)
+Câu 169: How much does the flight in the morning cost?
+A. 300 pounds
+B. 350 pounds ( ✓  Đáp án đúng)
+C. 400 pounds
+Câu 170: How long will he be late?
+A. 10 minutes ( ✓  Đáp án đúng)
+B. 15 minutes
+C. 20 minutes
+Câu 171: What does the man buy in the shop?
+A. Mugs
+B. Candles
+C. Clothes ( ✓  Đáp án đúng)
+Câu 172: The game does not let him?
+Đáp án: Win
+Câu 173: How is he going to travel to the city?
+A. by car
+B. by train
+C. by bus ( ✓  Đáp án đúng)
+Câu 174: What does the man enjoy on his vacation?
+Đáp án: Swimming in the sea
+Câu 175: What did she lose?
+A. Wallet
+B. Phone ( ✓  Đáp án đúng)
+C. Car
+Câu 176: Which part of the cabinet is original?
+A. The drawer ( ✓  Đáp án đúng)
+B. The doors
+C. The handles
+Câu 177: What time will they meet?
+A. 6 PM
+B. 5 PM
+C. 7 PM ( ✓  Đáp án đúng)
+Câu 178: What will end with?
+A. A dance performance
+B. A big celebration
+C. A surprise performance ( ✓  Đáp án đúng)
+Câu 179: Why does Vincent call James?
+A. To say hello
+B. To suggest to drink ( ✓  Đáp án đúng)
+C. To arrange meeting
+Câu 180: How much does the small car cost him?
+A. 3250 pounds ( ✓  Đáp án đúng)
+B. 3550 pounds
+C. 4250 pounds
+Câu 181: What did she lose?
+A. A book
+B. A laptop
+C. A phone ( ✓  Đáp án đúng)
+Câu 182: How many clients are Americans?
+A. One ( ✓  Đáp án đúng)
+B. Two
+C. Three
+Câu 183: What is Soobin's favorite room?
+A. Living room
+B. Bathroom ( ✓  Đáp án đúng)
+C. Kitchen
+Câu 184: What did the family do last year?
+A. Traveled abroad
+B. Camping ( ✓  Đáp án đúng)
+C. Went to the beach
+Câu 185: What does he like to study?
+A. Art ( ✓  Đáp án đúng)
+B. Science
+C. History
+Câu 186: What is the woman's favorite form of entertainment?
+A. Reading books
+B. Go to the theater ( ✓  Đáp án đúng)
+C. Playing chess with her cousin
+Câu 187: What does she ask her friend about?
+A. Where to buy a new table ( ✓  Đáp án đúng)
+B. The furniture
+C. Mirror
+Câu 188: Why does he prefer traveling by train?
+A. It’s cheaper than biking
+B. It’s practical ( ✓  Đáp án đúng)
+C. It’s faster than flying
+Câu 189: What is not original?
+Đáp án: Furniture
+Câu 190: Which button should the man press to buy a new computer?
+Đáp án: Three
+Câu 191: How much is an egg?
+A. £1.50 (One pound fifty) ( ✓  Đáp án đúng)
+B. £2.50
+C. £3.50
+Câu 192: What time does the train leave?
+A. 9:00
+B. 9:30 ( ✓  Đáp án đúng)
+C. 10:00
+Câu 193: How does the teacher go to school?
+A. He drives
+B. He takes the bus
+C. He walks ( ✓  Đáp án đúng)
+Câu 194: What time is lunch ready?
+Đáp án: 2 P.m
+Câu 195: What does the family do most weekends?
+A. Goes for a walk ( ✓  Đáp án đúng)
+B. Goes picnic
+C. Goes to the beach
+Câu 196: Where are they going to meet?
+A. At the university
+B. At the station
+C. At the park ( ✓  Đáp án đúng)
+Câu 197: What does his family do most of the weekend?
+Đáp án: Bowling
+Câu 198: When do they want to meet?
+A. On Tuesday ( ✓  Đáp án đúng)
+B. On Sunday
+C. On Saturday
+Câu 199: What is he going to do?
+A. To work in business ( ✓  Đáp án đúng)
+B. To become a teacher
+C. To study at college
+Câu 200: What course is the student going to take this year?
+A. Math
+B. Computers ( ✓  Đáp án đúng)
+C. Science
+Câu 201: What is the difference in her job?
+A. She works from 9 to 5
+B. She doesn't work on weekends
+C. She works irregular hours ( ✓  Đáp án đúng)
+Câu 202: Where is she going to buy food?
+Đáp án: At a new shopping center
+Câu 203: What is the main cause of poor air quality?
+A. Smokes from factories
+B. Vehicles on the roads
+C. Fire in the countryside ( ✓  Đáp án đúng)
+Câu 204: When is the meeting?
+A. On Thursday afternoon
+B. On Tuesday morning
+C. On Thursday morning ( ✓  Đáp án đúng)
+Câu 205: How old is the city?
+A. 2500 years
+B. 1500 years ( ✓  Đáp án đúng)
+C. 3500 years
+Câu 206: What color is Jack’s house?
+A. Blue
+B. Green
+C. Red ( ✓  Đáp án đúng)
+Câu 207: What does Jana’s sister look like?
+A. Curly hair
+B. Short ( ✓  Đáp án đúng)
+C. Thin
+Câu 208: What is the man going to do after work?
+A. Goes Running ( ✓  Đáp án đúng)
+B. Cycles home
+C. Meets his client
+Câu 209: How much time does she spend cycling?
+A. 15 minutes
+B. 25 minutes
+C. 35 minutes ( ✓  Đáp án đúng)
+Câu 210: What will the father do?
+A. Enroll him in summer school
+B. Arrange private class ( ✓  Đáp án đúng)
+C. Talk to the principal
+Câu 211: What does she do in her free time?
+A. Read books and paint
+B. Watch movies and go shopping
+C. Going to the theater and play sports ( ✓  Đáp án đúng)
+Câu 212: What was the woman good at?
+A. Swimming
+B. Plays Football ( ✓  Đáp án đúng)
+C. Running
+Câu 213: In what way does his mother and his aunt alike?
+A. They were both thin ( ✓  Đáp án đúng)
+B. They both had blue eyes.
+C. They both had long hair
+Câu 214: When does she usually write?
+A. In the mornings
+B. In the afternoons ( ✓  Đáp án đúng)
+C. In the evenings
+Câu 215: What should be the solution to lack of satisfaction at work?
+A. Raise the salary
+B. Seek a new job
+C. Request a transfer ( ✓  Đáp án đúng)
+Câu 216: What is her sister like?
+A. She is young
+B. They have similar characters ( ✓  Đáp án đúng)
+C. She will be wearing red coat
+Câu 217: Why does he choose to be a doctor?
+A. To help people ( ✓  Đáp án đúng)
+B. To make his family proud
+C. To make a lot of money
+Câu 218: What is his favorite teacher?
+A. Miss Taylor
+B. Mr. Styles
+C. Miss Brown ( ✓  Đáp án đúng)
+Câu 219: Why does the woman return the dress?
+A. Because of its size ( ✓  Đáp án đúng)
+B. Because of its color
+C. Because of its pattern
+Câu 220: What will she do during the holiday?
+A. Go for a bike ride
+B. Go for a run
+C. Go for a walk ( ✓  Đáp án đúng)
+Câu 221: What time will the mother meet the son?
+A. 3 o'clock ( ✓  Đáp án đúng)
+B. 4 o’clock
+C. 5 o'clock
+Câu 222: What does he want?
+A. Beer
+B. Water
+C. Iced tea ( ✓  Đáp án đúng)
+Câu 223: What is she going to do this afternoon?
+A. Go on a city tour ( ✓  Đáp án đúng)
+B. Visit a museum
+C. Relax at home
+Câu 224: What is she talking about?
+A. Her favorite hobby
+B. Her journey to works ( ✓  Đáp án đúng)
+C. Her weekend plans
+Câu 225: Where is the library located?
+A. On the left of the square ( ✓  Đáp án đúng)
+B. In front of the square
+C. Behind the square
+Câu 226: What advice does she give to save money?
+A. Buy in bulk
+B. Use the public transport ( ✓  Đáp án đúng)
+C. Put money into the bank
+Câu 227: Where are they standing?
+A. library complex
+B. university area ( ✓  Đáp án đúng)
+C. social housing area
+Câu 228: When will he see her?
+A. at 9 am on Sunday ( ✓  Đáp án đúng)
+B. at 10 am on Saturday
+C. at 8 am on Sunday
+Câu 229: What did the man lose?
+A. Jacket
+B. Glasses ( ✓  Đáp án đúng)
+C. Books`;
+
+        function parseListening(text) {
+            const lines = text.trim().split('\n');
+            const questions = [];
+            let currentQ = null;
+
+            for (let line of lines) {
+                line = line.trim();
+                if (!line) continue;
+
+                if (line.startsWith('Câu ')) {
+                    if (currentQ && currentQ.options.length > 0) questions.push(currentQ);
+                    const colonIdx = line.indexOf(':');
+                    currentQ = {
+                        id: line.substring(4, colonIdx).trim(),
+                        text: line.substring(colonIdx + 1).trim(),
+                        type: 'mcq',
+                        options: [],
+                        correctAnswer: null,
+                    };
+                } else if (line.match(/^[A-Z]\./)) {
+                    if (!currentQ) continue;
+                    let optText = line.substring(2).trim();
+                    const isCorrect = optText.includes('( ✓ Đáp án đúng)') || optText.includes('✓');
+                    if (isCorrect) {
+                        optText = optText.replace(/\(?\s*✓\s*Đáp án đúng\s*\)?/gi, '').trim();
+                        currentQ.correctAnswer = currentQ.options.length;
+                    }
+                    currentQ.options.push(optText);
+                } else if (line.startsWith('Đáp án:')) {
+                    if (!currentQ) continue;
+                    let ansText = line.substring(7).trim();
+                    currentQ.options.push(ansText);
+                    currentQ.correctAnswer = 0;
+                }
+            }
+            if (currentQ && currentQ.options.length > 0) questions.push(currentQ);
+
+            // Sinh đáp án nhiễu (Fake options) cho các câu chỉ có 1 đáp án
+            const allOptionsPool = Array.from(new Set(questions.flatMap(q => q.options)));
+            questions.forEach(q => {
+                if (q.options.length === 1) {
+                    const correctText = q.options[0];
+                    const correctWordCount = correctText.split(' ').length;
+                    let validFakes = allOptionsPool.filter(opt => {
+                        if (opt.toLowerCase() === correctText.toLowerCase()) return false;
+                        return Math.abs(opt.split(' ').length - correctWordCount) <= 2;
+                    });
+                    if (validFakes.length < 2) {
+                        validFakes = allOptionsPool.filter(opt => opt.toLowerCase() !== correctText.toLowerCase());
+                    }
+                    validFakes = validFakes.sort(() => 0.5 - Math.random());
+                    let newOptions = [correctText, validFakes[0] || "None", validFakes[1] || "All"];
+                    newOptions = newOptions.sort(() => 0.5 - Math.random());
+                    q.options = newOptions;
+                    q.correctAnswer = newOptions.indexOf(correctText);
+                }
+            });
+
+            return questions;
+        }
+
+        // Dữ liệu Reading Part 2
+        const dataReadingPart2 = [
+            { id: 1, title: "Topic: weekend activities", fixed: null, sentences: [
+                "It started early on Saturday morning with a ten- mile race for adults.",
+                "Sixty men and women ran in this, and Ms Kamur won with a very fast time",
+                "After receiving the prize, the children's activities and competitions began.",
+                "These activities included football, jumping, and swimming, and they had lots of fun.",
+                "They were all very hungry after all these, so they enjoyed tasty food and drinks with their parents"
+            ]},
+            { id: 2, title: "Topic: film", fixed: null, sentences: [
+                "The films in that period were different from the films of today.",
+                "This is because they were black and white, and there was no sound.",
+                "In addition to these technical limitations, film producers also had a very low budget",
+                "This lack of money mostly affected actors, and they didn't earn much",
+                "Things have changed over time, and some of them have earned millions of dollars after appearing in films"
+            ]},
+            { id: 3, title: "Transportation", fixed: null, sentences: [
+                "In the past, transportation was only available to the rich",
+                "The invention of cars and trains had changed everything and made travelling cheaper.",
+                "After these two means of transport, travelling becomes even easier with aero planes",
+                "Because flying with them is so fast, more people now go abroad for holiday and business.",
+                "It is more convenient to travel to other part of the world due to the improvement in transports"
+            ]},
+            { id: 4, title: "New Café in Town", fixed: "Last week I went to a new opening cafe on Corner Street", sentences: [
+                "It was full of people, and the staff were working hard on their first day.",
+                "Despite the crowd, they found me a nice table and brought me a menu.",
+                "When I first looked at the menu, I was disappointed since I hoped to see a variety of dishes.",
+                "I had to choose one of those, so I decided to choose the most expensive sandwich.",
+                "It was really good with cheese topping, and I would definitely go back to this place."
+            ]},
+            { id: 5, title: "Writing about a place", fixed: null, sentences: [
+                "Before starting writing, you need to do research and find out more details about the country",
+                "It must include data like its people, language, and its culture",
+                "It may not have enough those information, but still you can find similar ones",
+                "You can compare these three areas with your own country",
+                "This comparison can help you find similar understanding between the two nations"
+            ]},
+            { id: 6, title: "A famous singer", fixed: "Michael Jakman is a famous stage singer and performer.", sentences: [
+                "Before becoming famous at a young age, he studied art and music at high school",
+                "During this education, he started to perform on stage",
+                "During his performances on stage, he likes to wear colorful clothes and paint his face.",
+                "This strange ways of dressing and his songs attracted people's attention",
+                "They started to follow him on social media and he is now very famous"
+            ]},
+            { id: 7, title: "Thuyết trình (presentation)", fixed: null, sentences: [
+                "First, we prepare materials for our group presentation.",
+                "Then, we present our topic for five minutes.",
+                "During the presentation, we use pictures and our own words to explain the ideas.",
+                "After the presentation, the other students ask questions.",
+                "Finally, group members take turns answering the questions."
+            ]},
+            { id: 8, title: "Workplace Evolution", fixed: null, sentences: [
+                "In the past, employees followed strict nine-to-five schedules.",
+                "Limited technology once restricted remote work possibilities.",
+                "Modern workplaces are adopting more flexible work models.",
+                "Managers now use software to track project progress remotely.",
+                "Today, companies experiment with shorter workweeks to boost productivity."
+            ]},
+            { id: 9, title: "Topic: music festivals", fixed: "Last Saturday, a live music show was held in town park", sentences: [
+                "The local authority planned, sponsored, and paid for everything.",
+                "Because it was free, more than 5,000 people attended",
+                "Many of them arrived early and visited nearby shops while they were waiting for it to begin.",
+                "The staff there had a busy day, but they were able to close early and watch the famous singer perform.",
+                "He performed for two hours and everyone had great fun"
+            ]},
+            { id: 10, title: "Topic: end of term project", fixed: "This semester we have studied several chapters about local history in the class", sentences: [
+                "For end of term project, you need to choose at least 2 of these",
+                "It needs to include relevant images and your own text about the topic",
+                "Then you need to use images and written work to create a presentation",
+                "Your presentation offer your key points and you have around 5 minutes to talk",
+                "After this time, other students are able to ask questions and you need to answer them"
+            ]},
+            { id: 11, title: "The first American woman in space", fixed: "Her father was a skilled worker and her mother was a teacher", sentences: [
+                "With the support from parents, Mae went to university to study Science",
+                "Her degree allows her to get a seat on the training course in the USA.",
+                "This is about space and it helps her to become a member of a research team.",
+                "As a part of this group, she traveled in space and did a lot of experiments there",
+                "Some of those were about growing plants and some animals in a spaceship."
+            ]},
+            { id: 12, title: "Artificial Intelligence", fixed: null, sentences: [
+                "Over the past decade, artificial intelligence has revolutionized various industries.",
+                "The early AI systems were limited to simple pattern recognition tasks.",
+                "High computational costs previously hindered the development of AI.",
+                "Nowadays, AI engineers build advanced models for complex tasks such as language translation.",
+                "Modern AI tools help businesses to analyze data and make better decisions."
+            ]},
+            { id: 13, title: "University/College Welcome Day", fixed: "All students will attend the welcoming day on Monday, the 19th.", sentences: [
+                "The day will begin at 10 a.m in the morning with a short presentation.",
+                "At the end of this talk, you will meet the heads of departments and teachers.",
+                "These staff members will give you a guided tour in the buildings and our sport facilities in small groups",
+                "During this visit, you will need to stay with these students until lunch break.",
+                "This meal will be provided on the second floor of the engineering building"
+            ]}
+        ];
+
+        // --- READING PART 3 (Nối đoạn văn với người nói) ---
+       // --- READING PART 3 (Nối đáp án đoạn văn) ---
+        const dataReadingPart3 = [
+            {
+                id: 1, title: "Topic: Music Festival",
+                paragraphs: [
+                    { person: "A", text: "This is my first time going to a concert, and the experience was quite mixed. During the first two days. The music was rather ordinary, and the event would have been far more enjoyable if there had been just a little sunshine to brighten things up. Luckily, the last day completely changed my impression, as I finally got to see my favorite singers. Meeting them and enjoying the performances made the whole trip memorable and truly special." },
+                    { person: "B", text: "I attend music festivals every year, and over time it has become something of a personal tradition. I really enjoy the energetic atmosphere where people come together to share music and excitement. This particular festival, however, felt quite different from what I am used to. The weather conditions were less than perfect, though it didn't bother me that much, as I have enjoyed festivals in the rain before. The venue was moderately convenient and the performances themselves were rather unremarkable. To be honest, I doubt I will choose to come back in the future." },
+                    { person: "C", text: "I don't like one particular type of music being played at festivals, as I much prefer a variety of genres to enjoy and dance to. Luckily, this event truly lived up to what I was hoping for. The songs and melodies were absolutely impressive, leaving a strong impression on me. Although there was some rain, I actually felt it made the atmosphere even more vibrant and fun. One drawback, however, was the ticket price was quite high, which many students, including me, found difficult to afford." },
+                    { person: "D", text: "My band and I were invited to play at this festival, and we delivered the kind of performance our audience has come to expect from us. The show turned out to be truly memorable, not only because of the energy on stage but also because some of our ex-band members were present. It felt great to reconnect with them and share stories after the performance. The atmosphere overall was very positive, and the crowd seemed to enjoy every moment. The only real challenge was that the venue was located quite far from the main road, which made moving our instruments and equipment rather inconvenient." }
+                ],
+                questions: [
+                    { text: "Who is disappointed with the weather?", answer: "A" },
+                    { text: "Who enjoyed the final day of the music event?", answer: "A" },
+                    { text: "Who was not impressed by the event overall?", answer: "B" },
+                    { text: "Who enjoyed all the music at the music event?", answer: "C" },
+                    { text: "Who thought the event was expensive?", answer: "C" },
+                    { text: "Who likes meeting old friends?", answer: "D" },
+                    { text: "Who thought the location was not good?", answer: "D" }
+                ]
+            },
+            {
+                id: 2, title: "Topic: Extreme sport",
+                paragraphs: [
+                    { person: "A", text: "Before trying any extreme sport, I believe it’s absolutely essential to train properly. These kinds of activities are exciting, but they can also be dangerous if you don’t know what you’re doing. I’ve seen people get hurt because they didn’t prepare well. That’s why I always make sure to take a training course and understand the safety rules before I try anything new. With the right preparation, I think extreme sports can be a great experience." },
+                    { person: "B", text: "I’ve always been more into traditional sports like swimming, running, or playing tennis. They’re fun and easy to do regularly. But a few months ago, I went bungee jumping during a holiday, and it was an incredible experience. I didn’t expect to enjoy it so much! I still prefer regular sports for everyday fitness, but now I’m definitely more open to trying extreme sports once in a while for the adventure." },
+                    { person: "C", text: "What I love most about extreme sports is how they let me enjoy nature in a different way. Activities like rock climbing or mountain biking allow me to explore amazing places while challenging myself physically and mentally. It’s a way to disconnect from daily life and feel completely alive. If I had more time and money, I’d love to do these kinds of sports more often — especially in wild, remote areas." },
+                    { person: "D", text: "I know some people find extreme sports exciting, but for me, they’ve never been important. I actually avoid them as much as possible. I don’t like the idea of putting myself in danger just for fun. There are plenty of safer ways to stay active and enjoy life. I’d rather go for a walk or do yoga than jump out of a plane or climb a mountain. It’s just not my thing." }
+                ],
+                questions: [
+                    { text: "Who finds training before participating important?", answer: "A" },
+                    { text: "Who likes traditional sports like swimming?", answer: "B" },
+                    { text: "Who still likes extreme sports after playing once?", answer: "B" },
+                    { text: "Who enjoys nature?", answer: "C" },
+                    { text: "Who wants to play more extreme sports?", answer: "C" },
+                    { text: "Who finds extreme sports unimportant?", answer: "D" },
+                    { text: "Who always avoids playing extreme sports?", answer: "D" }
+                ]
+            },
+            {
+                id: 3, title: "Topic: Childhood",
+                paragraphs: [
+                    { person: "A", text: "As a child, I spent countless hours playing board games with my friends. The rules were simple and easy to grasp, which made the games enjoyable and accessible. As I grew older, I came to believe that board games could be a wonderful way for families to bond. However, modern games have become far more complex, with numerous rules and a wide range of characters to choose from. Although I truly enjoyed playing with my two boys and we often laughed together, I found that learning how to play required quite a bit of effort." },
+                    { person: "B", text: "I preferred playing outdoors with my friends when I was small. Fortunately, the weather where we lived was usually pleasant, so we often spent hours running around and chasing each other on the field. At times, we would lie down on the grass and make funny faces, enjoying the carefree moments of childhood. Those memories remain incredibly precious to me and shaped my desire to be surrounded by people. Even now, I find it difficult to stay at home alone for long." },
+                    { person: "C", text: "I wasn't able to move much as a child and even now. Instead, I was captivated by books and often preferred reading in my free time. There was a library I frequently visited, where I could lose myself in different stories for hours. Nowadays, I don't read as much as I used to, but I also don't go out very often because I spend time on my computer. I especially enjoy interactive games, as they allow me to socialise and connect with people online." },
+                    { person: "D", text: "I love playing outdoors. On gloomy days, which happened quite often, I would stare sadly out of the window, wishing I could be outside. There wasn't much to do indoors back then-until one day my mother surprised me with a box full of art supplies. Inside were vibrant palettes, paintbrushes of different sizes, and stacks of clean paper. That was the moment I discovered another passion: painting. I could spend hours simply gazing at a blank canvas, imagining what picture I might bring to life next." }
+                ],
+                questions: [
+                    { text: "Who enjoyed playing games with their children?", answer: "A" },
+                    { text: "Who thought traditional games were much simpler?", answer: "A" },
+                    { text: "Who enjoyed playing with their friends as a child?", answer: "B" },
+                    { text: "Who preferred reading books as a child?", answer: "C" },
+                    { text: "Who enjoyed playing modern games?", answer: "C" },
+                    { text: "Who enjoyed doing arts as a child?", answer: "D" },
+                    { text: "Who wished they could spend more time outdoors?", answer: "D" }
+                ]
+            },
+            {
+                id: 4, title: "Topic: Work-Life Balance",
+                paragraphs: [
+                    { person: "A", text: "As a child, I loved playing board games with my parents after their long workdays. Now, I play with my own kids, and my four-day workweek gives us more time. Flexible schedules help, but I plan carefully to balance work and family. These moments create lasting memories." },
+                    { person: "B", text: "When I was young, I set up pretend offices with my friends, using toy phones and notebooks. I enjoyed being the \"boss\" and planning tasks. Those games taught me organization and leadership, and I still smile thinking about our serious \"meetings.\"" },
+                    { person: "C", text: "As a kid, I read books about different jobs, dreaming of my future career. They sparked my ambition. Now, I use productivity apps to manage my tasks in a four-day workweek. The apps streamline my work, but the excitement of planning feels familiar." },
+                    { person: "D", text: "Growing up, I spent evenings playing tag in the neighborhood with friends. Rainy days kept me indoors, feeling bored. Now, I practice mindfulness to unwind after work. It helps me stay focused and refreshed, especially with a shorter workweek." }
+                ],
+                questions: [
+                    { text: "Who enjoys family time with board games?", answer: "A" },
+                    { text: "Who finds modern schedules more flexible?", answer: "A" },
+                    { text: "Who loved organizing pretend offices as a child?", answer: "B" },
+                    { text: "Who loved reading about careers as a child?", answer: "C" },
+                    { text: "Who now enjoys productivity apps?", answer: "C" },
+                    { text: "Who loved outdoor play as a child?", answer: "D" },
+                    { text: "Who now prefers mindfulness practices?", answer: "D" }
+                ]
+            },
+            {
+                id: 5, title: "Topic: Technology in Childhood",
+                paragraphs: [
+                    { person: "A", text: "Growing up, I watched TV shows about gadgets and inventions with my siblings. Rainy days kept us indoors, and we were always excited for new episodes. These shows sparked my interest in technology. Now, I prefer taking online courses to learn about topics like AI and blockchain. They’re flexible and keep me updated in a fast-changing world." },
+                    { person: "B", text: "When I was a child, I spent hours building and controlling toy robots with my friends. I loved making them move and watching how they worked. These toys helped develop my passion for technology, and I still enjoy exploring new devices and inventions today." },
+                    { person: "C", text: "As a kid, I couldn’t get enough of science magazines - especially ones about robots and computers. They inspired me to think creatively and learn how things work. That early interest stayed with me, and now I develop mobile apps to make everyday life easier. I still find the process just as exciting." },
+                    { person: "D", text: "I grew up playing simple computer games my dad programmed. Now, I enjoy teaching my children how to code using fun and easy platforms like Scratch. These modern tools make it much easier to learn. Coding together helps us bond while developing logical thinking and creativity." }
+                ],
+                questions: [
+                    { text: "Who loved watching technology shows as a child?", answer: "A" },
+                    { text: "Who now prefers online learning?", answer: "A" },
+                    { text: "Who loved playing with toy robots as a child?", answer: "B" },
+                    { text: "Who loved science magazines in the past?", answer: "C" },
+                    { text: "Who now enjoys app development?", answer: "C" },
+                    { text: "Who enjoys coding with family?", answer: "D" },
+                    { text: "Who finds modern tools more accessible?", answer: "D" }
+                ]
+            },
+            {
+                id: 6, title: "Topic: Volunteering",
+                paragraphs: [
+                    { person: "A", text: "Some people enjoy volunteering abroad, but honestly, I feel most people are more interested in traveling. I believe we should use our time more meaningfully. Each town has many people in need. Their situations are difficult, and they don't have the means to improve their quality of life. They are individuals who have contributed a lot to the country. Sharing stories with them helps us understand the differences between generations. We can also broaden our knowledge about local history, traditions, and culture through their experiences." },
+                    { person: "B", text: "My mother told me to do local volunteering because she is part of that organisation, but I'm not into it. I prefer volunteering abroad because I can develop soft skills – something that will benefit my future career. Also, meeting new people helps me expand my network and create valuable connections I can use later in my professional life." },
+                    { person: "C", text: "I'm too busy and rarely have any free time to do anything, so spending even a few hours volunteering is difficult. I would have to take half a day off work. I see many people in need and they genuinely require some extra financial support. That's something I can help with because I earn a good salary. Making monthly donations is not a problem for me it's how I show my support and contribution." },
+                    { person: "D", text: "I believe there are many ways we can show kindness through volunteering. I'm retired now, and I currently help build houses for people in need. I work with a volunteering organisation that already has clear plans in place. Through this work, I've had the chance to experience different foreign cultures. We're often sent to various countries to carry out these projects, so it's also a great way to travel while doing something meaningful. The job involves manual labour, so we're able to improve our physical health something that some people only begin to notice after a while." }
+                ],
+                questions: [
+                    { text: "Who thinks it should help local community?", answer: "A" },
+                    { text: "Who thinks it can improve knowledge about culture?", answer: "A" },
+                    { text: "Who wants to enhance future career?", answer: "B" },
+                    { text: "Who wants to make new friends?", answer: "B" },
+                    { text: "Who helps support charity work with money?", answer: "C" },
+                    { text: "Who thinks volunteering helps improve physical health?", answer: "D" },
+                    { text: "Who thinks it is a way to travel?", answer: "D" }
+                ]
+            },
+            {
+                id: 7, title: "Topic: Choosing a Career",
+                paragraphs: [
+                    { person: "A", text: "When I finished school, I didn't really know what I wanted to do. Some people advised me to get a job right away. However, I preferred to gain some practical experience first. That's why I applied for many volunteering roles. Even though I didn't earn any money, I was able to try different kinds of work. Looking back, I'm happy with my decision because of the useful knowledge I gained." },
+                    { person: "B", text: "I went straight to university after I graduated from high school. I had always wanted to become a teacher, so there was no need to look at other careers. Three months ago, I joined an internship at a local school. It was really an eye-opening experience, although the workload was heavier than I thought. Still, I believe it was very worthwhile." },
+                    { person: "C", text: "As a child, I lived near a plumber and sometimes worked with her. She asked me to do easy jobs like checking for pipe leaks or fastening the nails with a screw. So later, it felt natural for me to study at university to become an electrician. Now that I see there are short online electrical courses, I wish I had chosen that instead." },
+                    { person: "D", text: "After school, I wanted some time to figure out what I really wanted. So I started looking for temporary jobs. However, it was difficult to find one because most companies didn't accept people without experience. In the end, a game company contacted me and I agreed to work with them. The job was hybrid, so sometimes I worked in the evenings, but that was fine for me." }
+                ],
+                questions: [
+                    { text: "Who thinks they benefited from working for free?", answer: "A" },
+                    { text: "Who did not want to change to other careers?", answer: "B" },
+                    { text: "Who enjoyed working when training?", answer: "B" },
+                    { text: "Who enjoyed doing things with their hands?", answer: "C" },
+                    { text: "Who thinks their training was too long?", answer: "C" },
+                    { text: "Who thinks it was hard to get the first job?", answer: "D" },
+                    { text: "Who enjoys working in a flexible work environment?", answer: "D" }
+                ]
+            }
+        ];
+
+        const rawDataReadingPart1 = `
+Câu 1: In the _____, I cycle to work.
+A. sun
+B. morning ( ✓  Đáp án đúng)
+C. market
+Câu 2: My _____ cycle to work with me.
+A. friends ( ✓  Đáp án đúng)
+B. house
+C. car
+Câu 3: Therefore, I _____ my car at my house.
+A. stay
+B. burn
+C. leave ( ✓  Đáp án đúng)
+Câu 4: I feel _____ after cycling to work.
+A. big
+B. good ( ✓  Đáp án đúng)
+C. beautiful
+Câu 5: Then, I drink water and eat healthy _____.
+A. sugar
+B. beer
+C. food ( ✓  Đáp án đúng)
+Câu 6: When you are at the train _____, go to the main gate.
+A. school
+B. station ( ✓  Đáp án đúng)
+C. river
+Câu 7: The bus _____ are near.
+A. stops ( ✓  Đáp án đúng)
+B. towns
+C. places
+Câu 8: My house is on Parkon Street. It's _____, so you can not miss it.
+A. tired
+B. color
+C. green ( ✓  Đáp án đúng)
+Câu 9: After you come, we will have _____.
+A. dinner ( ✓  Đáp án đúng)
+B. food
+C. eat
+Câu 10: In the evening, we can watch some _____ together.
+A. animals
+B. films ( ✓  Đáp án đúng)
+C. bread
+Câu 11: We are _____ in a small house in the village.
+A. looking
+B. staying ( ✓  Đáp án đúng)
+C. playing
+Câu 12: There are a lot of trees in the _____.
+A. room
+B. house
+C. garden ( ✓  Đáp án đúng)
+Câu 13: We go fishing with our _____.
+A. parents
+B. children ( ✓  Đáp án đúng)
+C. friends
+Câu 14: Today, we are going to _____ the town by bus.
+A. visit ( ✓  Đáp án đúng)
+B. look
+C. watch
+Câu 15: There are some _____ buildings there.
+A. new
+B. modern
+C. old ( ✓  Đáp án đúng)
+Câu 16: I _____ the area where I live now.
+A. love ( ✓  Đáp án đúng)
+B. run
+C. should
+Câu 17: My house has a kitchen but it is very _____.
+A. small ( ✓  Đáp án đúng)
+B. tall
+C. short
+Câu 18: I work at a _____ and I sell clothes.
+A. car
+B. shop ( ✓  Đáp án đúng)
+C. window
+Câu 19: Everyday I talk to many _____.
+A. animals
+B. trees
+C. people ( ✓  Đáp án đúng)
+Câu 20: I am on my holiday and I'm excited that I can _____ you soon.
+A. show
+B. visit ( ✓  Đáp án đúng)
+C. play
+Câu 21: The new office is located _____ a great coffee shop, which is quite convenient.
+A. near ( ✓  Đáp án đúng)
+B. small
+C. big
+Câu 22: It's always _____ to work with a team that collaborates so well.
+A. hot
+B. friendly ( ✓  Đáp án đúng)
+C. angry
+Câu 23: I need to _____ my presentation skills before the big meeting next week.
+A. ignore
+B. pass
+C. practise ( ✓  Đáp án đúng)
+Câu 24: Please take some time to _____ through the proposal again and provide your feedback.
+A. hear
+B. read ( ✓  Đáp án đúng)
+C. watch
+Câu 25: I really appreciate your help, _____ let me know if you have any questions.
+A. so ( ✓  Đáp án đúng)
+B. to
+C. very
+Câu 26: My _____ is far from work.
+A. home ( ✓  Đáp án đúng)
+B. cat
+C. car
+Câu 27: I have to _____ to work.
+A. swim
+B. drive ( ✓  Đáp án đúng)
+C. dance
+Câu 28: I sometimes meet my _____ for lunch.
+A. furniture
+B. animals
+C. friends ( ✓  Đáp án đúng)
+Câu 29: We walk in the _____ sometimes.
+A. park ( ✓  Đáp án đúng)
+B. tree
+C. library
+Câu 30: The trees are _____ so we like looking at them.
+A. ugly
+B. pretty ( ✓  Đáp án đúng)
+C. noisy`;
+
+        const dataReadingPart4 = [
+            {
+                id: 1,
+                title: "The Arrival of the Four-Day Work Week",
+                options: [
+                    "A way of life now outdated",
+                    "Benefits for employees",
+                    "Undesirable financial consequences",
+                    "Unforeseen challenges for employees",
+                    "Difficult to give up old habits",
+                    "An unfair plan for some people",
+                    "Alternative solutions worth considering"
+                ],
+                paragraphs: [
+                    {
+                        answer: "A way of life now outdated",
+                        text: "For many decades, working five or even six days a week was seen as the norm. However, with modern technology, changing values, and a greater focus on work-life balance, that lifestyle is becoming less relevant. Employees and companies alike are beginning to question whether spending most of one’s week at work is still necessary or productive."
+                    },
+                    {
+                        answer: "Benefits for employees",
+                        text: "Supporters of the four-day work week argue that it offers numerous advantages for workers. With an extra day off, employees have more time to rest, spend with family, or pursue hobbies. Studies show that many people become more focused and productive when working fewer hours, leading to better performance and increased job satisfaction."
+                    },
+                    {
+                        answer: "Undesirable financial consequences",
+                        text: "Despite its appeal, a shorter work week can also lead to financial strain. Businesses may face higher costs due to hiring additional staff or adjusting pay structures. Some industries that rely on hourly workers might struggle to maintain profit margins, potentially resulting in reduced services or even layoffs."
+                    },
+                    {
+                        answer: "Unforeseen challenges for employees",
+                        text: "Not all employees adjust easily to a new schedule. Some may find it difficult to complete the same amount of work in fewer days, which can increase pressure and stress. In fast-paced industries, scheduling conflicts or missed deadlines can make the transition more complicated than expected."
+                    },
+                    {
+                        answer: "Difficult to give up old habits",
+                        text: "For those who have followed a traditional work schedule for years, switching to a four-day week can be uncomfortable. Old habits and routines are hard to break, and some individuals may resist change even if it is beneficial. It often takes time and support to help people adapt to a new way of working."
+                    },
+                    {
+                        answer: "An unfair plan for some people",
+                        text: "Although the four-day week sounds ideal for many, it might not be fair to everyone. Essential workers, healthcare staff, or those in hospitality may not have the option to reduce their hours. This could create inequality between different groups of employees and cause tension in the workplace."
+                    },
+                    {
+                        answer: "Alternative solutions worth considering",
+                        text: "Rather than applying a four-day week to all companies, experts suggest looking at flexible solutions. Some propose allowing employees to choose their working days, while others support shorter daily hours. These alternatives can offer similar benefits without disrupting businesses that rely on traditional schedules."
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "Mountain Summits",
+                options: [
+                    "Our changing perceptions toward mountains",
+                    "A sense of achievement",
+                    "Publicising one's achievements",
+                    "A wrong priority",
+                    "A disturbing revelation",
+                    "A focus on sustainability",
+                    "A more intimate relationship"
+                ],
+                paragraphs: [
+                    {
+                        answer: "Our changing perceptions toward mountains",
+                        text: "Even before the nineteenth century, mountains attracted travelers because of their beauty and the sense of awe they inspired. For early explorers, climbing was mainly about enjoyment and wonder. Today, the summit has become a symbolic destination representing success, endurance, and personal accomplishment."
+                    },
+                    {
+                        answer: "A sense of achievement",
+                        text: "For many climbers, reaching a summit carries deep personal significance. It is often seen as a metaphor for overcoming barriers and pushing human limits. The climb reflects psychological struggles, making success at the top highly rewarding, while scenery and encounters may become secondary."
+                    },
+                    {
+                        answer: "Publicising one's achievements",
+                        text: "The idea of summiting as achievement has grown with the summit selfie. What once preserved memories now often serves to broadcast success online. Social media has intensified this behavior, and in many cases the journey itself is overshadowed by the desire to prove one reached the top."
+                    },
+                    {
+                        answer: "A wrong priority",
+                        text: "Critics argue that the summit has become an end in itself, detached from the original spirit of exploration. Some people treat mountaineering as a fashionable objective, and preparation such as physical training, budgeting, and logistics is underestimated. Prestige can replace authentic engagement with the mountain."
+                    },
+                    {
+                        answer: "A disturbing revelation",
+                        text: "A famous 1993 photograph showed hundreds of climbers queuing in a single line to reach the summit. The image contrasted sharply with the solitude once linked to exploration and sparked debate about whether summiting had become spectacle. For many, it revealed a loss of authenticity in modern mountaineering."
+                    },
+                    {
+                        answer: "A focus on sustainability",
+                        text: "A major debate in modern mountaineering concerns sustainability. Popular routes face waste accumulation, environmental damage, and disrespect for local ecosystems. Many argue responsibility must be part of every stage of climbing so that success at the summit does not come at nature’s expense."
+                    },
+                    {
+                        answer: "A more intimate relationship",
+                        text: "Some suggest returning to a more authentic approach to climbing. Instead of chasing recognition, people can rediscover the joy of walking, observing, and slowing down. This perspective emphasizes serenity, reflection, and a deeper relationship with nature."
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: "Women Mathematicians / Emmy Noether",
+                options: [
+                    "Gender obscures achievements",
+                    "Acknowledging achievement of pioneering woman",
+                    "Men unfairly credited",
+                    "A long career showing exceptional ability",
+                    "Labels can change perspective on people",
+                    "Attempting to create a gender balance",
+                    "Uniformity is a disadvantage"
+                ],
+                paragraphs: [
+                    {
+                        answer: "Gender obscures achievements",
+                        text: "When Maryam Mirzakhani became the first woman to win the Fields Medal in 2014, it was a landmark in mathematics. Yet much media coverage focused more on her gender than on her work, raising concerns that science and mathematics are still implicitly seen as male domains."
+                    },
+                    {
+                        answer: "Acknowledging achievement of pioneering woman",
+                        text: "Long before modern debates, women had already made significant contributions. Maria Gaetana Agnesi wrote a complete calculus text and received a university professorship in mathematics, showing that women’s excellence had historical precedent."
+                    },
+                    {
+                        answer: "Men unfairly credited",
+                        text: "Philippa Garrett Fawcett outperformed all candidates in the Cambridge Mathematical Tripos in 1890, yet she was denied the official title reserved for men. Her case illustrates how institutional structures sidelined women even when they clearly surpassed expectations."
+                    },
+                    {
+                        answer: "A long career showing exceptional ability",
+                        text: "Mary Cartwright sustained a mathematical career for more than sixty years. Her work on nonlinear differential equations influenced chaos theory and had impact in both mathematics and engineering, despite the barriers women faced in academia."
+                    },
+                    {
+                        answer: "Labels can change perspective on people",
+                        text: "Terms like 'female genius' may appear positive but can unintentionally suggest that women’s excellence in mathematics is unusual. Such labels can reinforce stereotypes instead of normalizing success based on talent and effort."
+                    },
+                    {
+                        answer: "Attempting to create a gender balance",
+                        text: "Some institutions now use policies to increase fair representation in prizes and shortlists. These measures are debated, but many believe they are necessary steps to correct long-standing bias and make recognition systems more equitable."
+                    },
+                    {
+                        answer: "Uniformity is a disadvantage",
+                        text: "Standardized admissions or evaluation criteria can ignore different life paths and structural barriers, particularly for women balancing social and professional expectations. A one-size-fits-all model may fail to produce genuine equity or unlock the full potential of diverse talent."
+                    }
+                ]
+            }
+        ];
+
+        // Listening Part 2 - Câu 14 (4 speakers + dropdown A/B/C/D)
+        const dataListeningPart2Q14 = [
+            {
+                id: 1,
+                title: "Protect the environment",
+                options: [
+                    { key: "A", text: "give away used items" },
+                    { key: "B", text: "buy environmentally friendly products" },
+                    { key: "C", text: "reuse containers for storing food" },
+                    { key: "D", text: "not buy commercial cleaning products" }
+                ],
+                speakers: [
+                    { speaker: "A", answer: "A", text: "You know, it amazes me how much we throw away without thinking. I have started giving away my old clothes and furniture instead of dumping them. Think about it, someone else could really use what we consider junk. It is such a simple thing, but it keeps stuff out of landfills and helps people out." },
+                    { speaker: "B", answer: "B", text: "I think one of the biggest ways we can protect the environment is by changing what we buy. I only purchase products that are sustainably sourced or made from recycled materials. Every dollar we spend is like casting a vote for the kind of world we want." },
+                    { speaker: "C", answer: "C", text: "I have started reusing containers for storing food. I was tired of buying plastic wraps and bags every month just to toss them after one use. Now, I use glass jars and old containers to store leftovers, and it works just as well." },
+                    { speaker: "D", answer: "D", text: "I stopped buying commercial cleaning products altogether. Most of them are filled with harsh chemicals that are terrible for the environment. Now, I make my own cleaning solutions with vinegar, baking soda, and lemon juice." }
+                ]
+            },
+            {
+                id: 2,
+                title: "Protecting the environment 2",
+                options: [
+                    { key: "A", text: "using less electricity" },
+                    { key: "B", text: "not driving to work" },
+                    { key: "C", text: "shopping online" },
+                    { key: "D", text: "using less water" }
+                ],
+                speakers: [
+                    { speaker: "A", answer: "A", text: "I try to help the environment by using less electricity at home. I always turn off the lights when I do not need them and make sure my appliances are energy-efficient." },
+                    { speaker: "B", answer: "B", text: "To protect the environment, I do not drive to work anymore. Instead, I walk when the weather is nice, or I take the bus. By not driving, I use less fuel and help reduce air pollution." },
+                    { speaker: "C", answer: "C", text: "I have decided to shop online as a way to protect the environment. By ordering things online, I do not need to drive to the store. Online deliveries often group items together, which reduces trips." },
+                    { speaker: "D", answer: "D", text: "I try to save water every day. I take shorter showers, turn off the tap while brushing my teeth, and use less water when washing dishes. Even small actions can make a big difference." }
+                ]
+            },
+            {
+                id: 3,
+                title: "Shopping habits",
+                options: [
+                    { key: "A", text: "the products are delivered" },
+                    { key: "B", text: "it is cheaper" },
+                    { key: "C", text: "it saves time" },
+                    { key: "D", text: "it has more choices" }
+                ],
+                speakers: [
+                    { speaker: "A", answer: "A", text: "You know what I love about online shopping? I do not even need to leave my house. The delivery driver brings it right to my doorstep, and all I have to do is click a button." },
+                    { speaker: "B", answer: "B", text: "What really gets me excited is how reasonable the price can be. Online stores are often cheaper than in-store prices, and I can compare different sites in minutes." },
+                    { speaker: "C", answer: "C", text: "With online shopping, I can find what I want quickly and then get back to what I was doing. No driving, no waiting in lines, and no hassle." },
+                    { speaker: "D", answer: "D", text: "What I love about shopping online is the incredible variety of products available. I can find more brands, styles, and hard-to-find sizes without being limited by local stock." }
+                ]
+            },
+            {
+                id: 4,
+                title: "Listening to music",
+                options: [
+                    { key: "A", text: "to relax" },
+                    { key: "B", text: "while studying" },
+                    { key: "C", text: "while singing" },
+                    { key: "D", text: "after waking up" }
+                ],
+                speakers: [
+                    { speaker: "A", answer: "A", text: "I like to listen to music when I want to relax. It helps me switch off from everything after a long day." },
+                    { speaker: "B", answer: "B", text: "For me, music is a must when I am studying. I concentrate better when instrumental music plays in the background." },
+                    { speaker: "C", answer: "C", text: "I have always loved singing, so I listen to music whenever I feel like practicing my vocals. I like to sing along and improve my voice." },
+                    { speaker: "D", answer: "D", text: "I like to start my day with music as soon as I wake up. Upbeat songs help me feel energized and ready for the day." }
+                ]
+            },
+            {
+                id: 5,
+                title: "Exercise preferences",
+                options: [
+                    { key: "A", text: "mountain biking" },
+                    { key: "B", text: "going for a run" },
+                    { key: "C", text: "walking" },
+                    { key: "D", text: "horse riding" }
+                ],
+                speakers: [
+                    { speaker: "A", answer: "A", text: "I find nothing more exciting than mountain biking. I love rough terrain and feeling the wind as I go downhill." },
+                    { speaker: "B", answer: "B", text: "I have tried lots of activities, but I get the most out of a good jog. It keeps my energy up and clears my mind." },
+                    { speaker: "C", answer: "C", text: "I prefer something low-key and calming. Walking is the perfect balance for me and helps me stay active every day." },
+                    { speaker: "D", answer: "D", text: "One thing that stands out for me is horse riding. It is both calming and exciting, and I love connecting with animals and nature." }
+                ]
+            },
+            {
+                id: 6,
+                title: "The place to run",
+                options: [
+                    { key: "A", text: "in the street" },
+                    { key: "B", text: "at the seaside" },
+                    { key: "C", text: "on the running track" },
+                    { key: "D", text: "in the fitness center" }
+                ],
+                speakers: [
+                    { speaker: "A", answer: "A", text: "The city gives me new things to see every time I run. Running in the street is what I love most." },
+                    { speaker: "B", answer: "B", text: "The clean air by the sea makes me feel good and clear-headed. There is nothing better than running at the seaside." },
+                    { speaker: "C", answer: "C", text: "The track helps me know exactly how far I have run and lets me set goals. For me, the running track is best." },
+                    { speaker: "D", answer: "D", text: "Inside, I do not have to worry about weather. I can use the treadmill and other machines, so I like running in the fitness center best." }
+                ]
+            },
+            {
+                id: 7,
+                title: "Doing exercise",
+                options: [
+                    { key: "A", text: "improve work performance" },
+                    { key: "B", text: "find exercise tiring" },
+                    { key: "C", text: "have fun exercising with others" },
+                    { key: "D", text: "hate exercising" }
+                ],
+                speakers: [
+                    { speaker: "A", answer: "A", text: "Exercise helps me release stress and clear my mind. After exercising, I feel more focused and ready for work." },
+                    { speaker: "B", answer: "B", text: "Honestly, exercise wears me out. I know it is good for me, but I find it exhausting rather than energizing." },
+                    { speaker: "C", answer: "C", text: "Exercising is a blast when you are with the right people. Group classes feel like a party, and we motivate each other." },
+                    { speaker: "D", answer: "D", text: "Exercise? I cannot stand it. I find it miserable and would rather do other healthy activities that I actually enjoy." }
+                ]
+            },
+            {
+                id: 8,
+                title: "Purposes of using the Internet",
+                options: [
+                    { key: "A", text: "watch films" },
+                    { key: "B", text: "communicate with friends" },
+                    { key: "C", text: "complete assignments" },
+                    { key: "D", text: "find transport information" }
+                ],
+                speakers: [
+                    { speaker: "A", answer: "A", text: "I spend much of my free time online mostly because I love watching movies. I can stream what I want anytime." },
+                    { speaker: "B", answer: "B", text: "The main reason I use the Internet is to stay in touch with my friends through messages, calls, and social media." },
+                    { speaker: "C", answer: "C", text: "For me, the Internet is essential for completing school assignments. I use it to research, download notes, and submit homework." },
+                    { speaker: "D", answer: "D", text: "Whenever I need to plan a trip, I use the Internet to find transportation details like train schedules and bus routes." }
+                ]
+            },
+            {
+                id: 9,
+                title: "Art",
+                options: [
+                    { key: "A", text: "a social activity" },
+                    { key: "B", text: "with children" },
+                    { key: "C", text: "as part of the job" },
+                    { key: "D", text: "alone" }
+                ],
+                speakers: [
+                    { speaker: "A", answer: "A", text: "I love when people come together to create something. Art becomes a shared experience and brings us together." },
+                    { speaker: "B", answer: "B", text: "Kids are fearless with art. Teaching them reminds me that creativity should be free, playful, and expressive." },
+                    { speaker: "C", answer: "C", text: "Art is part of my work, so it comes with deadlines and goals. I balance my ideas with project needs." },
+                    { speaker: "D", answer: "D", text: "Art is a quiet, personal thing for me. Creating alone brings peace and gives me space to express freely." }
+                ]
+            },
+            {
+                id: 10,
+                title: "Journey to work",
+                options: [
+                    { key: "A", text: "walk with friends" },
+                    { key: "B", text: "go by bus" },
+                    { key: "C", text: "walk alone" },
+                    { key: "D", text: "drive car" }
+                ],
+                speakers: [
+                    { speaker: "A", answer: "A", text: "Mornings are my favorite because I catch up with friends while we walk. By the time we arrive, I am in a good mood." },
+                    { speaker: "B", answer: "B", text: "I hop on the bus, watch the world go by, and listen to music. It is my little transition time before work." },
+                    { speaker: "C", answer: "C", text: "I like quiet mornings. Walking alone gives me time to think and breathe before the day begins." },
+                    { speaker: "D", answer: "D", text: "Every morning it is just me, my car, and the road. I enjoy choosing my route and starting the day with control." }
+                ]
+            },
+            {
+                id: 11,
+                title: "Studying habit (1)",
+                options: [
+                    { key: "A", text: "late at night" },
+                    { key: "B", text: "at various places" },
+                    { key: "C", text: "with music" },
+                    { key: "D", text: "in a quiet place" }
+                ],
+                speakers: [
+                    { speaker: "A", answer: "A", text: "Late-night hours work best for my studying. The quietness helps me focus deeply without interruptions." },
+                    { speaker: "B", answer: "B", text: "Changing my study space helps me stay productive. I move between the library, cafes, and parks." },
+                    { speaker: "C", answer: "C", text: "When I study, background music makes a noticeable difference. Soft instrumental tracks help me stay motivated." },
+                    { speaker: "D", answer: "D", text: "I learn best in quiet places like a silent room at home or a secluded corner in the library." }
+                ]
+            },
+            {
+                id: 12,
+                title: "Studying habit (2)",
+                options: [
+                    { key: "A", text: "in the coffee shop" },
+                    { key: "B", text: "in a park" },
+                    { key: "C", text: "on public transport" },
+                    { key: "D", text: "at home" }
+                ],
+                speakers: [
+                    { speaker: "A", answer: "A", text: "There is a coffee shop near my house, and I often study there because the presence of other people keeps me motivated." },
+                    { speaker: "B", answer: "B", text: "I prefer studying under the trees in the park. The air is fresh, and I feel more comfortable than in classrooms." },
+                    { speaker: "C", answer: "C", text: "My commute is long, so I use train time to do homework and review lessons. It works effectively for me." },
+                    { speaker: "D", answer: "D", text: "I do not like crowded places. I usually study on the sofa in my living room because my house is quiet." }
+                ]
+            }
+        ];
+
+        const modules = [
+            { id: 'part1', title: 'Listening Part 1 (229 câu)', type: 'mcq', data: rawDataPart1 },
+            { id: 'listening2q14', title: 'Listening Part 2 (Câu 14)', type: 'listening2', data: dataListeningPart2Q14 },
+            { id: 'reading1', title: 'Reading Part 1 (Fill In The Blanks)', type: 'mcq', data: rawDataReadingPart1 },
+            { id: 'part2', title: 'Reading Part 2 (Sắp xếp 2 cột)', type: 'reorder', data: dataReadingPart2 },
+            { id: 'part3', title: 'Reading Part 3 (Matching)', type: 'reading3', data: dataReadingPart3 }, // <--- THÊM DÒNG NÀY
+            { id: 'part4', title: 'Reading Part 4 (Dropdown Matching)', type: 'reading4', data: dataReadingPart4 },
+        ];
+
+        // ==========================================
+        // 2. TRẠNG THÁI ỨNG DỤNG (STATE)
+        // ==========================================
+       let state = {
+            activeModule: modules[0],
+            questions: parseListening(modules[0].data),
+            appState: 'menu', 
+            currentIndex: 0,
+            score: 0,
+            isAnswered: false,
+            
+            selectedOptionIndex: null, // Trắc nghiệm
+            availableItems: [], slottedItems: [], dragSource: null, // Sắp xếp
+            dropdownAnswers: {}, // <--- THÊM BIẾN NÀY CHO READING PART 3 (Lưu đáp án User chọn)
+            reading3Current: null,
+            reading4Answers: {},
+            reading4Current: null,
+            listening2Answers: {},
+            listening2Current: null,
+
+            isSidebarOpen: false
+        };
+
+        function setState(newState) {
+            state = { ...state, ...newState };
+            render();
+        }
+
+        // ==========================================
+        // 3. CÁC HÀM XỬ LÝ LOGIC
+        // ==========================================
+        function shuffleArray(array) {
+            let newArr = [...array];
+            let isSame = true;
+            while(isSame && newArr.length > 1) {
+                newArr.sort(() => 0.5 - Math.random());
+                isSame = newArr.every((item, i) => item.originalIndex === i);
+            }
+            return newArr;
+        }
+
+        function shuffleSimple(array) {
+            const newArr = [...array];
+            for (let i = newArr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+            }
+            return newArr;
+        }
+
+        function setupQuestion(index) {
+            let updates = {
+                isAnswered: false,
+                selectedOptionIndex: null,
+                currentIndex: index,
+                dropdownAnswers: {},
+                reading3Current: null,
+                reading4Answers: {},
+                reading4Current: null,
+                listening2Answers: {},
+                listening2Current: null
+            };
+
+            if (state.activeModule.type === 'reorder' && state.questions[index]) {
+                const items = state.questions[index].sentences.map((text, idx) => ({ id: `id-${idx}`, originalIndex: idx, text }));
+                updates.availableItems = shuffleArray(items);
+                updates.slottedItems = new Array(items.length).fill(null);
+            }
+
+            if (state.activeModule.type === 'reading3' && state.questions[index]) {
+                const q = state.questions[index];
+                updates.reading3Current = {
+                    ...q,
+                    paragraphs: shuffleSimple(q.paragraphs),
+                    questions: shuffleSimple(q.questions)
+                };
+            }
+
+            if (state.activeModule.type === 'reading4' && state.questions[index]) {
+                const q = state.questions[index];
+                updates.reading4Current = {
+                    ...q,
+                    paragraphs: shuffleSimple(q.paragraphs)
+                };
+            }
+
+            if (state.activeModule.type === 'listening2' && state.questions[index]) {
+                const q = state.questions[index];
+                updates.listening2Current = {
+                    ...q,
+                    speakers: shuffleSimple(q.speakers)
+                };
+            }
+
+            setState(updates);
+        }
+
+        // Đưa các hàm ra global (window) để gọi từ HTML nội tuyến
+        window.changeModule = function(moduleId) {
+            const mod = modules.find(m => m.id === moduleId);
+            const questions = mod.type === 'mcq' ? parseListening(mod.data) : mod.data;
+            if (window.speechSynthesis) window.speechSynthesis.cancel();
+            setState({ activeModule: mod, questions: questions, appState: 'menu', isSidebarOpen: false, reading3Current: null, dropdownAnswers: {}, reading4Current: null, reading4Answers: {}, listening2Current: null, listening2Answers: {} });
+        };
+
+        window.toggleSidebar = function(forceClose = false) {
+            setState({ isSidebarOpen: forceClose ? false : !state.isSidebarOpen });
+        };
+
+        window.startQuiz = function() {
+            setState({ appState: 'quiz', score: 0 });
+            setupQuestion(0);
+        };
+
+        window.selectOption = function(idx) {
+            if (state.isAnswered) return;
+            setState({ selectedOptionIndex: idx });
+        };
+
+        window.selectDropdownOption = function(qIndex, value) {
+            if (state.isAnswered) return;
+            const mainContainer = document.getElementById('app-main');
+            const previousScrollTop = mainContainer ? mainContainer.scrollTop : 0;
+            const newAnswers = { ...state.dropdownAnswers, [qIndex]: value };
+            setState({ dropdownAnswers: newAnswers });
+
+            // Keep reading position stable after rerender.
+            requestAnimationFrame(() => {
+                const nextMainContainer = document.getElementById('app-main');
+                if (nextMainContainer) {
+                    nextMainContainer.scrollTop = previousScrollTop;
+                }
+            });
+        };
+
+        window.selectReading4Option = function(pIndex, value) {
+            if (state.isAnswered) return;
+            const mainContainer = document.getElementById('app-main');
+            const previousScrollTop = mainContainer ? mainContainer.scrollTop : 0;
+            const newAnswers = { ...state.reading4Answers, [pIndex]: value };
+            setState({ reading4Answers: newAnswers });
+
+            requestAnimationFrame(() => {
+                const nextMainContainer = document.getElementById('app-main');
+                if (nextMainContainer) nextMainContainer.scrollTop = previousScrollTop;
+            });
+        };
+
+        window.selectListening2Option = function(speakerIndex, value) {
+            if (state.isAnswered) return;
+            const mainContainer = document.getElementById('app-main');
+            const previousScrollTop = mainContainer ? mainContainer.scrollTop : 0;
+            const newAnswers = { ...state.listening2Answers, [speakerIndex]: value };
+            setState({ listening2Answers: newAnswers });
+
+            requestAnimationFrame(() => {
+                const nextMainContainer = document.getElementById('app-main');
+                if (nextMainContainer) nextMainContainer.scrollTop = previousScrollTop;
+            });
+        };
+
+        window.getListening2OptionLabel = function(question, key) {
+            if (!question || !question.options) return key || '';
+            const matched = question.options.find(opt => opt.key === key);
+            if (!matched) return key || '';
+            return `${matched.key}. ${matched.text}`;
+        };
+
+        window.getEnglishVoice = function() {
+            if (!('speechSynthesis' in window)) return null;
+            const voices = window.speechSynthesis.getVoices() || [];
+            if (!voices.length) return null;
+            return voices.find(v => /^en[-_]/i.test(v.lang) && /female|zira|aria|jenny/i.test(v.name))
+                || voices.find(v => /^en[-_]/i.test(v.lang) && /us|uk/i.test(v.lang))
+                || voices.find(v => /^en[-_]/i.test(v.lang))
+                || voices[0];
+        };
+
+        window.speakText = function(text, onEnd = null) {
+            if (!('speechSynthesis' in window)) {
+                alert('Trình duyệt không hỗ trợ tính năng phát âm.');
+                return;
+            }
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.95;
+            const pickedVoice = window.getEnglishVoice();
+            if (pickedVoice) utterance.voice = pickedVoice;
+            if (typeof onEnd === 'function') utterance.onend = onEnd;
+            window.speechSynthesis.speak(utterance);
+        };
+
+        window.stopSpeaking = function() {
+            if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+        };
+
+        window.playAllListening2 = function() {
+            const currentQ = state.listening2Current || state.questions[state.currentIndex];
+            if (!currentQ || !currentQ.speakers) return;
+            if (!('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+
+            const queue = currentQ.speakers.map((s, idx) => `Speaker ${idx + 1}. ${s.text}`);
+            const speakNext = (i) => {
+                if (i >= queue.length) return;
+                window.speakText(queue[i], () => setTimeout(() => speakNext(i + 1), 150));
+            };
+            speakNext(0);
+        };
+
+        window.playListening2Speaker = function(speakerIndex) {
+            const currentQ = state.listening2Current || state.questions[state.currentIndex];
+            if (!currentQ || !currentQ.speakers || !currentQ.speakers[speakerIndex]) return;
+            if (!('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+            const text = currentQ.speakers[speakerIndex].text;
+            window.speakText(text);
+        };
+
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.onvoiceschanged = () => {
+                window.speechSynthesis.getVoices();
+            };
+        }
+
+        window.checkAnswer = function() {
+            if (state.isAnswered) return;
+            let isCorrect = false;
+
+            if (state.activeModule.type === 'mcq') {
+                if (state.selectedOptionIndex === null) return;
+                isCorrect = state.selectedOptionIndex === state.questions[state.currentIndex].correctAnswer;
+            } else if (state.activeModule.type === 'reorder') {
+                isCorrect = state.slottedItems.every((item, idx) => item && item.originalIndex === idx);
+            } else if (state.activeModule.type === 'reading3') {
+                const currentQ = state.reading3Current || state.questions[state.currentIndex];
+                const totalCorrect = currentQ.questions.reduce((count, q, idx) => {
+                    return count + (state.dropdownAnswers[idx] === q.answer ? 1 : 0);
+                }, 0);
+                isCorrect = totalCorrect === currentQ.questions.length;
+            } else if (state.activeModule.type === 'reading4') {
+                const currentQ = state.reading4Current || state.questions[state.currentIndex];
+                const totalCorrect = currentQ.paragraphs.reduce((count, p, idx) => {
+                    return count + (state.reading4Answers[idx] === p.answer ? 1 : 0);
+                }, 0);
+                isCorrect = totalCorrect === currentQ.paragraphs.length;
+            } else if (state.activeModule.type === 'listening2') {
+                const currentQ = state.listening2Current || state.questions[state.currentIndex];
+                const totalCorrect = currentQ.speakers.reduce((count, s, idx) => {
+                    return count + (state.listening2Answers[idx] === s.answer ? 1 : 0);
+                }, 0);
+                isCorrect = totalCorrect === currentQ.speakers.length;
+            }
+
+            setState({ 
+                isAnswered: true,
+                score: isCorrect ? state.score + 1 : state.score
+            });
+        };
+
+        window.nextQuestion = function() {
+            if (window.speechSynthesis) window.speechSynthesis.cancel();
+            if (state.currentIndex < state.questions.length - 1) {
+                setupQuestion(state.currentIndex + 1);
+            } else {
+                setState({ appState: 'result' });
+            }
+        };
+
+        // Kéo Thả (Drag and Drop)
+        window.handleDragStart = function(e, type, index) {
+            if (state.isAnswered) {
+                e.preventDefault();
+                return;
+            }
+            let item = type === 'pool' ? state.availableItems[index] : state.slottedItems[index];
+            state.dragSource = { type, index, item };
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', item.id);
+        };
+
+        window.handleDragOver = function(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('drag-over');
+        };
+
+        window.handleDragLeave = function(e) {
+            e.currentTarget.classList.remove('drag-over');
+        }
+
+        window.handleDropOnSlot = function(e, slotIndex) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            if (state.isAnswered || !state.dragSource) return;
+
+            const newSlotted = [...state.slottedItems];
+            const newAvailable = [...state.availableItems];
+            const targetItem = newSlotted[slotIndex];
+
+            if (state.dragSource.type === 'pool') {
+                newAvailable.splice(state.dragSource.index, 1);
+                newSlotted[slotIndex] = state.dragSource.item;
+                if (targetItem) newAvailable.push(targetItem);
+            } else if (state.dragSource.type === 'slot') {
+                if (state.dragSource.index === slotIndex) return;
+                newSlotted[state.dragSource.index] = targetItem;
+                newSlotted[slotIndex] = state.dragSource.item;
+            }
+
+            setState({ slottedItems: newSlotted, availableItems: newAvailable, dragSource: null });
+        };
+
+        window.handleDropOnPool = function(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            if (state.isAnswered || !state.dragSource) return;
+
+            if (state.dragSource.type === 'slot') {
+                const newSlotted = [...state.slottedItems];
+                const newAvailable = [...state.availableItems];
+                newSlotted[state.dragSource.index] = null;
+                newAvailable.push(state.dragSource.item);
+                setState({ slottedItems: newSlotted, availableItems: newAvailable, dragSource: null });
+            } else {
+                state.dragSource = null;
+            }
+        };
+
+        // Nhấp (Tap) để đổi ô (Cho Mobile)
+        window.handleClickPoolItem = function(index) {
+            if (state.isAnswered) return;
+            const firstEmptySlot = state.slottedItems.findIndex(item => item === null);
+            if (firstEmptySlot !== -1) {
+                const newSlotted = [...state.slottedItems];
+                const newAvailable = [...state.availableItems];
+                const item = newAvailable.splice(index, 1)[0];
+                newSlotted[firstEmptySlot] = item;
+                setState({ slottedItems: newSlotted, availableItems: newAvailable });
+            }
+        };
+
+        window.handleClickSlotItem = function(index) {
+            if (state.isAnswered || !state.slottedItems[index]) return;
+            const newSlotted = [...state.slottedItems];
+            const newAvailable = [...state.availableItems];
+            const item = newSlotted[index];
+            newSlotted[index] = null;
+            newAvailable.push(item);
+            setState({ slottedItems: newSlotted, availableItems: newAvailable });
+        };
+
+        // ==========================================
+        // 4. HÀM VẼ GIAO DIỆN (RENDER)
+        // ==========================================
+        function render() {
+            const root = document.getElementById('root');
+            
+            // Sidebar Template
+            const sidebarHTML = `
+                <div class="fixed inset-y-0 left-0 z-50 w-72 bg-white shadow-xl transform ${state.isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 transition-transform duration-300 ease-in-out flex flex-col">
+                    <div class="p-5 flex justify-between items-center border-b">
+                        <h2 class="text-xl font-bold text-blue-700 flex items-center gap-2">
+                            <i class="fa-solid fa-book-open"></i> Thư viện Đề
+                        </h2>
+                        <button class="lg:hidden text-gray-500 hover:text-gray-800" onclick="window.toggleSidebar(true)">
+                            <i class="fa-solid fa-xmark text-2xl"></i>
+                        </button>
+                    </div>
+                    <div class="p-4 space-y-3 overflow-y-auto flex-1">
+                        ${modules.map(mod => `
+                            <button onclick="window.changeModule('${mod.id}')" class="w-full text-left px-4 py-4 rounded-xl transition-all border-2 ${state.activeModule.id === mod.id ? 'bg-blue-50 border-blue-500 text-blue-800 font-bold shadow-sm' : 'border-transparent text-gray-600 hover:bg-gray-100'}">
+                                <div class="text-sm text-gray-400 font-medium mb-1">
+                                    ${mod.type === 'mcq' ? 'Trắc nghiệm' : mod.type === 'reorder' ? 'Sắp xếp (2 cột)' : mod.type === 'reading3' ? 'Matching' : mod.type === 'reading4' ? 'Dropdown Matching' : 'Listening + Dropdown'}
+                                </div>
+                                ${mod.title}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+                ${state.isSidebarOpen ? `<div class="fixed inset-0 bg-black/20 z-40 lg:hidden" onclick="window.toggleSidebar(true)"></div>` : ''}
+            `;
+
+            // Menu View
+            const menuHTML = `
+                <div class="flex flex-col items-center justify-center h-full text-center space-y-6 fade-in">
+                    <div class="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mb-4 shadow-inner">
+                        <i class="fa-solid fa-book-open text-5xl"></i>
+                    </div>
+                    <h1 class="text-3xl md:text-4xl font-extrabold text-gray-800">${state.activeModule.title}</h1>
+                    <p class="text-gray-500 max-w-md">
+                        ${state.activeModule.type === 'mcq' 
+                            ? `Bộ đề có tổng cộng ${state.questions.length} câu trắc nghiệm. Các đáp án đã được hệ thống tự động xáo trộn.`
+                            : state.activeModule.type === 'reorder'
+                                ? `Bài tập có ${state.questions.length} đoạn văn. Hãy kéo thả các câu văn vào đúng ô trống bên phải để tạo thành đoạn văn.`
+                                : state.activeModule.type === 'reading3'
+                                    ? `Bài tập có ${state.questions.length} bộ đoạn văn matching. Hãy chọn Person A/B/C/D cho từng câu hỏi.`
+                                    : state.activeModule.type === 'reading4'
+                                        ? `Bài tập có ${state.questions.length} bộ bài Reading Part 4. Mỗi bộ gồm 7 đoạn, chọn đáp án phù hợp bằng dropdown trên từng đoạn.`
+                                        : `Bài nghe có ${state.questions.length} câu. Mỗi câu có 4 đoạn Speaker, bạn bấm nghe và chọn đáp án A/B/C/D cho từng đoạn.`}
+                    </p>
+                    <button onclick="window.startQuiz()" class="mt-8 px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl shadow-lg hover:shadow-blue-500/30 transform hover:-translate-y-1 transition-all text-lg flex items-center gap-2">
+                        Bắt đầu làm bài <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+            `;
+
+            // Quiz View
+            let quizHTML = '';
+            if (state.appState === 'quiz') {
+                const currentQ = state.activeModule.type === 'reading3'
+                    ? (state.reading3Current || state.questions[state.currentIndex])
+                    : state.activeModule.type === 'reading4'
+                        ? (state.reading4Current || state.questions[state.currentIndex])
+                        : state.activeModule.type === 'listening2'
+                            ? (state.listening2Current || state.questions[state.currentIndex])
+                        : state.questions[state.currentIndex];
+                const isSubmitDisabled = 
+                    (state.activeModule.type === 'mcq' && state.selectedOptionIndex === null) || 
+                    (state.activeModule.type === 'reorder' && state.slottedItems.some(item => item === null)) ||
+                    (state.activeModule.type === 'reading3' && Object.keys(state.dropdownAnswers).length < currentQ.questions.length) ||
+                    (state.activeModule.type === 'reading4' && Object.keys(state.reading4Answers).length < currentQ.paragraphs.length) ||
+                    (state.activeModule.type === 'listening2' && Object.keys(state.listening2Answers).length < currentQ.speakers.length);
+
+                let contentHTML = '';
+                
+                // MCQ Render
+                if (state.activeModule.type === 'mcq') {
+                    const optionsHTML = currentQ.options.map((opt, idx) => {
+                        let btnStyle = "border-gray-200 text-gray-700 hover:bg-blue-50 hover:border-blue-300 cursor-pointer";
+                        if (state.selectedOptionIndex === idx) btnStyle = "border-blue-500 bg-blue-50 text-blue-800 ring-2 ring-blue-200";
+                        
+                        let iconHTML = '';
+                        if (state.isAnswered) {
+                            btnStyle += " cursor-default pointer-events-none"; // Khóa nút khi đã trả lời
+                            if (idx === currentQ.correctAnswer) {
+                                btnStyle = "border-green-500 bg-green-50 text-green-800 font-bold";
+                                iconHTML = `<i class="fa-solid fa-circle-check text-green-600 text-xl"></i>`;
+                            } else if (idx === state.selectedOptionIndex) {
+                                btnStyle = "border-red-500 bg-red-50 text-red-800";
+                                iconHTML = `<i class="fa-solid fa-circle-xmark text-red-500 text-xl"></i>`;
+                            } else {
+                                btnStyle = "border-gray-200 text-gray-400 opacity-50";
+                            }
+                        }
+
+                        return `
+                            <button onclick="window.selectOption(${idx})" class="w-full text-left p-4 rounded-xl border-2 transition-all duration-200 flex justify-between items-center ${btnStyle}">
+                                <span><span class="font-semibold mr-3">${String.fromCharCode(65 + idx)}.</span> ${opt}</span>
+                                ${iconHTML}
+                            </button>
+                        `;
+                    }).join('');
+
+                    contentHTML = `<div class="space-y-3 mt-auto max-w-2xl mx-auto w-full">${optionsHTML}</div>`;
+                } 
+                // Reorder Render
+                else if (state.activeModule.type === 'reorder') {
+                    const poolItemsHTML = state.availableItems.length === 0 
+                        ? `<div class="h-full flex flex-col items-center justify-center text-gray-400 pb-10"><i class="fa-solid fa-circle-check text-4xl mb-2 opacity-50"></i><p>Đã chọn hết câu</p></div>`
+                        : state.availableItems.map((item, idx) => `
+                            <div draggable="${!state.isAnswered}" ondragstart="window.handleDragStart(event, 'pool', ${idx})" onclick="window.handleClickPoolItem(${idx})" 
+                                class="bg-white border-2 border-gray-200 p-3 lg:p-4 rounded-xl shadow-sm flex items-start group transition-all ${!state.isAnswered ? 'cursor-grab hover:border-blue-400 hover:shadow-md' : 'opacity-50'}">
+                                <i class="fa-solid fa-grip-vertical text-gray-300 mt-1 mr-2 shrink-0 group-hover:text-blue-500"></i>
+                                <span class="text-gray-700 leading-snug">${item.text}</span>
+                            </div>
+                        `).join('');
+
+                    const slotItemsHTML = state.slottedItems.map((item, idx) => {
+                        let slotStyle = "bg-white/60 border-dashed border-gray-300";
+                        let innerClass = "text-gray-400 italic text-sm p-4 w-full h-full flex items-center justify-center select-none";
+                        let innerContent = "Kéo thả hoặc chạm vào câu...";
+                        
+                        if (item) {
+                            slotStyle = "bg-white border-blue-400 shadow-sm";
+                            innerClass = `p-3 lg:p-4 w-full h-full flex items-center ${!state.isAnswered ? 'cursor-grab hover:bg-blue-50/50' : ''}`;
+                            
+                            let iconHTML = '';
+                            if (state.isAnswered) {
+                                if (item.originalIndex === idx) {
+                                    slotStyle = "bg-green-50 border-green-500 text-green-900 shadow-sm";
+                                    iconHTML = `<i class="fa-solid fa-circle-check text-green-500 ml-2 shrink-0"></i>`;
+                                } else {
+                                    slotStyle = "bg-red-50 border-red-400 text-red-900 line-through opacity-80";
+                                    iconHTML = `<i class="fa-solid fa-circle-xmark text-red-500 ml-2 shrink-0"></i>`;
+                                }
+                            }
+                            
+                            innerContent = `
+                                <div draggable="${!state.isAnswered}" ondragstart="window.handleDragStart(event, 'slot', ${idx})" onclick="window.handleClickSlotItem(${idx})" class="flex items-center w-full">
+                                    <span class="flex-1 leading-snug">${item.text}</span>
+                                    ${iconHTML}
+                                </div>
+                            `;
+                        }
+
+                        let numberClass = `w-12 shrink-0 flex items-center justify-center font-bold text-lg border-r-2 ${item && state.isAnswered ? (item.originalIndex === idx ? 'border-green-200 text-green-600' : 'border-red-200 text-red-500') : item ? 'border-blue-100 text-blue-500 bg-blue-50/50 rounded-l-xl' : 'border-gray-100 text-gray-300'}`;
+
+                        return `
+                            <div ondragover="window.handleDragOver(event)" ondragleave="window.handleDragLeave(event)" ondrop="window.handleDropOnSlot(event, ${idx})" class="border-2 rounded-xl min-h-[76px] flex items-stretch transition-all ${slotStyle}">
+                                <div class="${numberClass}">${idx + 1}</div>
+                                <div class="flex-1 flex items-center">${innerContent}</div>
+                            </div>
+                        `;
+                    }).join('');
+
+                    let fixHTML = currentQ.fixed ? `
+                        <div class="p-3 lg:p-4 bg-white border-2 border-transparent shadow-sm rounded-xl text-gray-700 flex mb-3">
+                            <span class="font-bold mr-3 text-blue-600">0.</span> 
+                            <span class="font-medium text-gray-800">${currentQ.fixed}</span>
+                        </div>
+                    ` : '';
+
+                    let solutionPanelHTML = '';
+                    if (state.isAnswered) {
+                        let sentencesHTML = currentQ.sentences.map((text, idx) => `<div><span class="font-bold w-6 inline-block">${idx + 1}.</span> ${text}</div>`).join('');
+                        solutionPanelHTML = `
+                            <div class="flex-1 min-h-[280px] lg:min-h-0 bg-green-50/40 p-4 md:p-5 rounded-2xl border-2 border-green-200 flex flex-col">
+                                <div class="mb-4">
+                                    <h3 class="font-bold text-green-800 text-lg flex items-center">
+                                        <i class="fa-solid fa-circle-check mr-2"></i> Đáp án chuẩn
+                                    </h3>
+                                    <p class="text-sm text-green-700/80 mt-1">Đối chiếu trực tiếp với bài làm ở cột bên phải.</p>
+                                </div>
+                                <div class="space-y-3 flex-1 overflow-y-auto pr-1 text-green-900 text-sm md:text-base leading-relaxed">
+                                    ${currentQ.fixed ? `<div><span class="font-bold w-6 inline-block">0.</span> ${currentQ.fixed}</div>` : ''}
+                                    ${sentencesHTML}
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    const leftPanelHTML = state.isAnswered
+                        ? solutionPanelHTML
+                        : `
+                            <div ondragover="window.handleDragOver(event)" ondragleave="window.handleDragLeave(event)" ondrop="window.handleDropOnPool(event)" class="flex-1 min-h-[280px] lg:min-h-0 bg-gray-50/50 p-4 md:p-5 rounded-2xl border-2 border-dashed border-gray-300 flex flex-col">
+                                <div class="mb-4">
+                                    <h3 class="font-bold text-gray-700 text-lg">Các câu bị xáo trộn</h3>
+                                    <p class="text-sm text-gray-500 mt-1">Kéo thả hoặc chạm vào câu để chuyển.</p>
+                                </div>
+                                <div class="space-y-3 flex-1 overflow-y-auto pr-1">${poolItemsHTML}</div>
+                            </div>
+                        `;
+
+                    contentHTML = `
+                        <div class="flex-1 flex flex-col lg:flex-row gap-6 min-h-0">
+                            <!-- Cột Trái -->
+                            ${leftPanelHTML}
+                            <!-- Mũi tên giữa -->
+                            <div class="hidden lg:flex items-center justify-center text-gray-300">
+                                <i class="fa-solid fa-arrow-right text-3xl"></i>
+                            </div>
+                            <!-- Cột Phải -->
+                            <div class="flex-1 min-h-[280px] lg:min-h-0 flex flex-col">
+                                <div class="mb-4">
+                                    <h3 class="font-bold text-blue-800 text-lg">Đoạn văn hoàn chỉnh</h3>
+                                    <p class="text-sm text-blue-600/70 mt-1">Thả các câu vào vị trí tương ứng</p>
+                                </div>
+                                <div class="space-y-3 bg-blue-50/30 p-4 md:p-5 rounded-2xl border border-blue-100 flex-1 overflow-y-auto pr-1">
+                                    ${fixHTML}
+                                    ${slotItemsHTML}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else if (state.activeModule.type === 'reading3') {
+                    const paragraphsHTML = currentQ.paragraphs.map(p => `
+                        <div class="mb-5 bg-white border border-gray-200 rounded-xl p-4 md:p-5">
+                            <h3 class="font-bold text-gray-800 mb-2 text-lg">Person ${p.person}</h3>
+                            <p class="text-gray-700 text-justify leading-relaxed text-base">${p.text}</p>
+                        </div>
+                    `).join('');
+
+                    const questionsHTML = currentQ.questions.map((q, idx) => {
+                        let selectStyle = "border-gray-300 text-gray-700 bg-white hover:border-blue-400 focus:ring-2 focus:ring-blue-100";
+                        let feedbackIcon = "";
+                        const userAnswer = state.dropdownAnswers[idx] || "";
+
+                        if (state.isAnswered) {
+                            if (userAnswer === q.answer) {
+                                selectStyle = "border-green-500 bg-green-50 text-green-700 font-bold";
+                                feedbackIcon = `<i class="fa-solid fa-check text-green-500 ml-2"></i>`;
+                            } else {
+                                selectStyle = "border-red-500 bg-red-50 text-red-700";
+                                feedbackIcon = `<i class="fa-solid fa-xmark text-red-500 ml-2"></i> <span class="text-green-600 font-bold ml-2 text-sm">(Đúng: ${q.answer})</span>`;
+                            }
+                        }
+
+                        return `
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between py-3 border-b border-gray-100 last:border-0 gap-3">
+                                <div class="flex-1">
+                                    <span class="font-bold mr-2 text-gray-700">${idx + 1}.</span>
+                                    <span class="text-gray-700">${q.text}</span>
+                                </div>
+                                <div class="flex items-center shrink-0">
+                                    <select
+                                        ${state.isAnswered ? 'disabled' : ''}
+                                        onchange="window.selectDropdownOption(${idx}, this.value)"
+                                        class="px-4 py-2 border-2 rounded-lg outline-none cursor-pointer transition-all ${selectStyle}"
+                                    >
+                                        <option value="" disabled ${!userAnswer ? 'selected' : ''}>Chọn...</option>
+                                        ${currentQ.paragraphs.map(p => `<option value="${p.person}" ${userAnswer === p.person ? 'selected' : ''}>Person ${p.person}</option>`).join('')}
+                                    </select>
+                                    ${feedbackIcon}
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+
+                    contentHTML = `
+                        <div class="space-y-6">
+                            <div class="bg-gray-50 border border-gray-200 rounded-2xl p-4 md:p-6">
+                                <h3 class="font-bold text-gray-800 text-xl mb-4">Đoạn văn</h3>
+                                ${paragraphsHTML}
+                            </div>
+                            <div class="bg-white border-2 border-blue-100 rounded-2xl p-4 md:p-6">
+                                <h3 class="font-bold text-blue-800 text-xl mb-4">Choose the correct person (A, B, C or D)</h3>
+                                <div class="space-y-1">
+                                    ${questionsHTML}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else if (state.activeModule.type === 'reading4') {
+                    const paragraphItemsHTML = currentQ.paragraphs.map((p, idx) => {
+                        const userAnswer = state.reading4Answers[idx] || "";
+                        let selectStyle = "border-gray-300 text-gray-700 bg-white hover:border-blue-400 focus:ring-2 focus:ring-blue-100";
+                        let feedbackHTML = "";
+
+                        if (state.isAnswered) {
+                            if (userAnswer === p.answer) {
+                                selectStyle = "border-green-500 bg-green-50 text-green-700 font-bold";
+                                feedbackHTML = `<span class="text-green-600 text-sm font-semibold">Đúng</span>`;
+                            } else {
+                                selectStyle = "border-red-500 bg-red-50 text-red-700";
+                                feedbackHTML = `<span class="text-red-500 text-sm font-semibold">Sai</span><span class="text-green-600 text-sm font-semibold">Đáp án: ${p.answer}</span>`;
+                            }
+                        }
+
+                        return `
+                            <div class="bg-white border border-gray-200 rounded-2xl p-4 md:p-5 space-y-3">
+                                <div class="flex flex-wrap items-center gap-3">
+                                    <span class="text-sm font-semibold text-gray-500">Paragraph ${idx + 1}</span>
+                                    <select
+                                        ${state.isAnswered ? 'disabled' : ''}
+                                        onchange="window.selectReading4Option(${idx}, this.value)"
+                                        class="px-4 py-2 border-2 rounded-lg outline-none cursor-pointer transition-all ${selectStyle}"
+                                    >
+                                        <option value="" disabled ${!userAnswer ? 'selected' : ''}>Chọn heading...</option>
+                                        ${currentQ.options.map(opt => `<option value="${opt}" ${userAnswer === opt ? 'selected' : ''}>${opt}</option>`).join('')}
+                                    </select>
+                                    <div class="flex items-center gap-2">${feedbackHTML}</div>
+                                </div>
+                                <p class="text-gray-700 leading-relaxed text-base">${p.text}</p>
+                            </div>
+                        `;
+                    }).join('');
+
+                    contentHTML = `
+                        <div class="space-y-6">
+                            <div class="space-y-4">
+                                ${paragraphItemsHTML}
+                            </div>
+                        </div>
+                    `;
+                } else if (state.activeModule.type === 'listening2') {
+                    const speakerCardsHTML = currentQ.speakers.map((s, idx) => {
+                        const userAnswer = state.listening2Answers[idx] || '';
+                        let selectStyle = 'border-gray-300 text-gray-700 bg-white';
+                        let resultHTML = '';
+                        if (state.isAnswered) {
+                            if (userAnswer === s.answer) {
+                                selectStyle = 'border-green-500 bg-green-50 text-green-700 font-bold';
+                                resultHTML = '<span class="text-green-600 font-semibold">Đúng</span>';
+                            } else {
+                                selectStyle = 'border-red-500 bg-red-50 text-red-700';
+                                resultHTML = `<span class="text-red-600 font-semibold">Sai</span><span class="text-green-700 text-sm">Đáp án: ${window.getListening2OptionLabel(currentQ, s.answer)}</span>`;
+                            }
+                        }
+
+                        return `
+                            <div class="bg-white border border-gray-200 rounded-2xl p-4 space-y-3">
+                                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                                    <h4 class="font-bold text-gray-800 text-lg">Speaker ${idx + 1}</h4>
+                                    <button onclick="window.playListening2Speaker(${idx})" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-semibold">
+                                        <i class="fa-solid fa-volume-high mr-2"></i>Nghe đoạn này
+                                    </button>
+                                </div>
+                                <div class="flex flex-wrap items-center gap-3">
+                                    <select
+                                        ${state.isAnswered ? 'disabled' : ''}
+                                        onchange="window.selectListening2Option(${idx}, this.value)"
+                                        class="px-4 py-2 border-2 rounded-lg outline-none cursor-pointer ${selectStyle}"
+                                    >
+                                        <option value="" disabled ${!userAnswer ? 'selected' : ''}>Chọn đáp án</option>
+                                        ${currentQ.options.map(opt => `<option value="${opt.key}" ${userAnswer === opt.key ? 'selected' : ''}>${opt.key}. ${opt.text}</option>`).join('')}
+                                    </select>
+                                    <div class="flex items-center gap-2">${resultHTML}</div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+
+                    contentHTML = `
+                        <div class="space-y-5">
+                            <div class="flex flex-wrap gap-3">
+                                <button onclick="window.playAllListening2()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold">
+                                    <i class="fa-solid fa-headphones mr-2"></i>Nghe cả 4 đoạn
+                                </button>
+                                <button onclick="window.stopSpeaking()" class="px-4 py-2 bg-gray-700 hover:bg-black text-white rounded-lg font-semibold">
+                                    <i class="fa-solid fa-stop mr-2"></i>Dừng đọc
+                                </button>
+                            </div>
+                            <div class="space-y-4">${speakerCardsHTML}</div>
+                        </div>
+                    `;
+                }
+
+                quizHTML = `
+                    <div class="w-full ${state.activeModule.type === 'reorder' || state.activeModule.type === 'reading3' || state.activeModule.type === 'reading4' || state.activeModule.type === 'listening2' ? 'max-w-7xl' : 'max-w-5xl'} mx-auto flex flex-col h-full">
+                        <div class="mb-6 shrink-0">
+                            <div class="flex justify-between text-sm font-medium text-gray-500 mb-2">
+                                <span>Câu ${state.currentIndex + 1} / ${state.questions.length}</span>
+                                <span>Điểm: ${state.score}</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-blue-600 h-2.5 rounded-full transition-all duration-300" style="width: ${((state.currentIndex + 1) / state.questions.length) * 100}%"></div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100 flex-grow flex flex-col ${state.activeModule.type === 'reading3' || state.activeModule.type === 'reading4' || state.activeModule.type === 'listening2' ? 'overflow-visible' : 'overflow-hidden'}">
+                            <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-6 leading-relaxed border-b pb-4 shrink-0">
+                                <span class="text-blue-600 mr-2">
+                                    ${state.activeModule.type === 'mcq' ? `Q${currentQ.id}.` : `Đoạn ${currentQ.id}:`}
+                                </span> 
+                                ${state.activeModule.type === 'mcq' ? currentQ.text : currentQ.title}
+                            </h2>
+                            ${contentHTML}
+                        </div>
+
+                        <div class="mt-6 flex justify-end shrink-0">
+                            ${!state.isAnswered ? `
+                                <button onclick="window.checkAnswer()" ${isSubmitDisabled ? 'disabled' : ''} class="px-8 py-3 bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed hover:bg-blue-700 text-white font-bold rounded-xl shadow-md transition-all text-lg">
+                                    Kiểm tra
+                                </button>
+                            ` : `
+                                <button onclick="window.nextQuestion()" class="px-8 py-3 bg-gray-800 hover:bg-black text-white font-bold rounded-xl shadow-md transition-all flex items-center gap-2 text-lg">
+                                    ${state.currentIndex < state.questions.length - 1 ? 'Chuyển bài tiếp theo' : 'Xem kết quả'} <i class="fa-solid fa-chevron-right"></i>
+                                </button>
+                            `}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Result View
+            let resultHTML = '';
+            if (state.appState === 'result') {
+                const percentage = Math.round((state.score / state.questions.length) * 100);
+                let message = "Cần cố gắng hơn!";
+                let stars = '';
+                if (percentage >= 80) { message = "Xuất sắc!"; stars = '<div class="absolute -top-2 -right-2 text-2xl">✨</div>'; }
+                else if (percentage >= 50) message = "Khá tốt!";
+
+                resultHTML = `
+                    <div class="flex flex-col items-center justify-center h-full text-center space-y-8 fade-in">
+                        <div class="w-32 h-32 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-500 shadow-xl border-4 border-white relative">
+                            <i class="fa-solid fa-trophy text-6xl"></i>
+                            ${stars}
+                        </div>
+                        <div>
+                            <h2 class="text-3xl font-bold text-gray-800 mb-2">Hoàn thành!</h2>
+                            <p class="text-xl text-blue-600 font-semibold">${message}</p>
+                        </div>
+                        <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 w-full max-w-sm">
+                            <div class="text-5xl font-black text-gray-800 mb-2">
+                                ${state.score} <span class="text-2xl text-gray-400">/ ${state.questions.length}</span>
+                            </div>
+                            <p class="text-gray-500 font-medium">Độ chính xác: ${percentage}%</p>
+                        </div>
+                        <div class="flex gap-4">
+                            <button onclick="window.startQuiz()" class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-md transition-all flex items-center gap-2">
+                                <i class="fa-solid fa-rotate-right"></i> Làm lại bài này
+                            </button>
+                            <button onclick="window.setState({appState: 'menu', isSidebarOpen: true})" class="px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold rounded-xl transition-all">
+                                Chọn bài khác
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Ráp toàn bộ lại
+            root.innerHTML = `
+                ${sidebarHTML}
+                <div class="flex-1 lg:ml-72 flex flex-col h-screen overflow-hidden">
+                    <header class="bg-white border-b px-4 py-3 flex items-center justify-between sticky top-0 z-30 shadow-sm shrink-0">
+                        <div class="flex items-center gap-3">
+                            <button onclick="window.toggleSidebar()" class="p-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-600 transition-colors lg:hidden">
+                                <i class="fa-solid fa-bars text-xl"></i>
+                            </button>
+                            <h1 class="font-bold text-lg text-gray-800 hidden sm:block">Hệ thống Ôn Tập Tiếng Anh</h1>
+                        </div>
+                        <div class="text-sm font-medium text-blue-600 bg-blue-50 px-4 py-1.5 rounded-full border border-blue-100 flex items-center">
+                            ${state.activeModule.type === 'reorder' ? 'Sắp xếp (2 Cột)' : state.activeModule.type === 'reading3' ? 'Reading Part 3 (Matching)' : state.activeModule.type === 'reading4' ? 'Reading Part 4 (Dropdown Matching)' : state.activeModule.type === 'listening2' ? 'Listening Part 2 (Câu 14)' : 'Trắc nghiệm'}
+                        </div>
+                    </header>
+                    <main id="app-main" class="flex-1 overflow-y-auto p-4 md:p-8 flex flex-col relative bg-[#f8fafc]">
+                        ${state.appState === 'menu' ? menuHTML : state.appState === 'quiz' ? quizHTML : resultHTML}
+                    </main>
+                </div>
+            `;
+        }
+
+        // Khởi chạy ứng dụng lần đầu
+        render();
+    </script>
+</body>
+</html>
