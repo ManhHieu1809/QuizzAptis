@@ -1556,9 +1556,129 @@ C. noisy`;
             }
         ];
 
+        const rawDataListening15 = `
+1
+Continuity is important when planning a career: M
+Job security cannot be guaranteed: W
+Job satisfaction is important for motivator: B
+Technological improvement is good for the economy: M
+2
+People share very similar ideas about beauty: M
+Views of beauty change over time: W
+Beauty can be found in unlikely places: B
+Traditional ideas of beauty are going to change: W
+3
+The future generation will fail to cope with new information: M
+The information revolution will be good for the economy: W
+No computer is superior to the human brain: W
+More should be done to protect individual privacy: B
+4
+There is too much information on the internet: B
+Using internet requires skills: W
+The internet is changing the way we think: W
+Internet has made people less patient: B
+5
+Art is only suitable for the privileged few: W
+The government should invest more in arts: M
+Children should be exposed to art early: B
+In the future, art will become more accessible: M
+6
+Singers play a good role for young people: M
+Taste in music is a highly personal thing: B
+Music is a universal language: M
+Music can manipulate people's feelings: B
+7
+Technology helps make education more accessible: B
+Social interaction is important: W
+The diverse curriculum is not an advantage: M
+University competition should be encouraged: W
+8
+Young people are becoming more interested in politics: B
+Social media has changed political activism: M
+People are better informed about political issues: W
+More women are likely to participate in politics: B
+9
+Living space is more important than farming space: W
+Urban farming sites can be visually appealing: B
+Urban farming can benefit local economics: M
+Urban farming cannot meet food needs: B
+10
+The exhibition should be different: M
+The traditions are losing significance: Both
+The local festival will disappear soon: W
+Schools are important: W
+11
+Building design can influence people's behavior: Both
+Creating a community can take time: Woman
+Work communities and social communities are the same: Man
+Technology has changed how community forms: Man
+12
+Exhibitions should be different and diverse: Man
+Traditional customs are gradually losing their significance: Both
+Local festivals will disappear soon in the near future: Woman
+Schools are important to shaping future generations: Woman
+13
+Living space is more important than farming space: Man
+Urban farming sites can be visually appealing: Woman
+Urban farming can benefit local economics: Woman
+Urban farming is insufficient to meet food needs: Both
+14
+Building design can influence people's behavior: Both
+Creating a community can take time: Man
+Work communities and social communities are the same: Woman
+Technology has changed how community forms: Both`;
+
+        function parseListening15BMW(text) {
+            const lines = text.trim().split('\n').map(l => l.trim()).filter(Boolean);
+            const groups = [];
+            let current = null;
+
+            const normalizeAnswer = (raw) => {
+                const token = (raw || '').trim().toLowerCase();
+                if (token === 'b' || token === 'both') return 'Both';
+                if (token === 'm' || token === 'man') return 'Man';
+                if (token === 'w' || token === 'woman') return 'Woman';
+                return null;
+            };
+
+            for (const line of lines) {
+                if (/^\d+$/.test(line)) {
+                    if (current && current.items.length) groups.push(current);
+                    current = { id: Number(line), title: `Set ${line}`, items: [] };
+                    continue;
+                }
+
+                if (!current) continue;
+                let cleaned = line.replace(/^●\s*/, '').trim();
+                let statement = '';
+                let answerRaw = '';
+
+                if (cleaned.includes(':')) {
+                    const idx = cleaned.lastIndexOf(':');
+                    statement = cleaned.slice(0, idx).trim();
+                    answerRaw = cleaned.slice(idx + 1).trim();
+                } else {
+                    const m = cleaned.match(/^(.*?)\s+(Both|Man|Woman|B|M|W)\.?$/i);
+                    if (!m) continue;
+                    statement = m[1].trim();
+                    answerRaw = m[2].trim();
+                }
+
+                const answer = normalizeAnswer(answerRaw);
+                if (!answer || !statement) continue;
+                current.items.push({ text: statement.replace(/\.+$/, ''), answer });
+            }
+
+            if (current && current.items.length) groups.push(current);
+            return groups.filter(g => g.items.length === 4);
+        }
+
+        const dataListening15BMW = parseListening15BMW(rawDataListening15);
+
         const modules = [
             { id: 'part1', title: 'Listening Part 1 (229 câu)', type: 'mcq', data: rawDataPart1 },
             { id: 'listening2q14', title: 'Listening Part 2 (Câu 14)', type: 'listening2', data: dataListeningPart2Q14 },
+            { id: 'listening15', title: 'Listening 15 (Both/Man/Woman)', type: 'listeningbmw', data: dataListening15BMW },
             { id: 'reading1', title: 'Reading Part 1 (Fill In The Blanks)', type: 'mcq', data: rawDataReadingPart1 },
             { id: 'part2', title: 'Reading Part 2 (Sắp xếp 2 cột)', type: 'reorder', data: dataReadingPart2 },
             { id: 'part3', title: 'Reading Part 3 (Matching)', type: 'reading3', data: dataReadingPart3 }, // <--- THÊM DÒNG NÀY
@@ -1584,6 +1704,8 @@ C. noisy`;
             reading4Current: null,
             listening2Answers: {},
             listening2Current: null,
+            listeningBMWAnswers: {},
+            listeningBMWCurrent: null,
 
             isSidebarOpen: false
         };
@@ -1625,7 +1747,9 @@ C. noisy`;
                 reading4Answers: {},
                 reading4Current: null,
                 listening2Answers: {},
-                listening2Current: null
+                listening2Current: null,
+                listeningBMWAnswers: {},
+                listeningBMWCurrent: null
             };
 
             if (state.activeModule.type === 'reorder' && state.questions[index]) {
@@ -1659,6 +1783,10 @@ C. noisy`;
                 };
             }
 
+            if (state.activeModule.type === 'listeningbmw' && state.questions[index]) {
+                updates.listeningBMWCurrent = state.questions[index];
+            }
+
             setState(updates);
         }
 
@@ -1667,7 +1795,7 @@ C. noisy`;
             const mod = modules.find(m => m.id === moduleId);
             const questions = mod.type === 'mcq' ? parseListening(mod.data) : mod.data;
             if (window.speechSynthesis) window.speechSynthesis.cancel();
-            setState({ activeModule: mod, questions: questions, appState: 'menu', isSidebarOpen: false, reading3Current: null, dropdownAnswers: {}, reading4Current: null, reading4Answers: {}, listening2Current: null, listening2Answers: {} });
+            setState({ activeModule: mod, questions: questions, appState: 'menu', isSidebarOpen: false, reading3Current: null, dropdownAnswers: {}, reading4Current: null, reading4Answers: {}, listening2Current: null, listening2Answers: {}, listeningBMWCurrent: null, listeningBMWAnswers: {} });
         };
 
         window.toggleSidebar = function(forceClose = false) {
@@ -1719,6 +1847,19 @@ C. noisy`;
             const previousScrollTop = mainContainer ? mainContainer.scrollTop : 0;
             const newAnswers = { ...state.listening2Answers, [speakerIndex]: value };
             setState({ listening2Answers: newAnswers });
+
+            requestAnimationFrame(() => {
+                const nextMainContainer = document.getElementById('app-main');
+                if (nextMainContainer) nextMainContainer.scrollTop = previousScrollTop;
+            });
+        };
+
+        window.selectListeningBMWOption = function(itemIndex, value) {
+            if (state.isAnswered) return;
+            const mainContainer = document.getElementById('app-main');
+            const previousScrollTop = mainContainer ? mainContainer.scrollTop : 0;
+            const newAnswers = { ...state.listeningBMWAnswers, [itemIndex]: value };
+            setState({ listeningBMWAnswers: newAnswers });
 
             requestAnimationFrame(() => {
                 const nextMainContainer = document.getElementById('app-main');
@@ -1817,6 +1958,12 @@ C. noisy`;
                     return count + (state.listening2Answers[idx] === s.answer ? 1 : 0);
                 }, 0);
                 isCorrect = totalCorrect === currentQ.speakers.length;
+            } else if (state.activeModule.type === 'listeningbmw') {
+                const currentQ = state.listeningBMWCurrent || state.questions[state.currentIndex];
+                const totalCorrect = currentQ.items.reduce((count, item, idx) => {
+                    return count + (state.listeningBMWAnswers[idx] === item.answer ? 1 : 0);
+                }, 0);
+                isCorrect = totalCorrect === currentQ.items.length;
             }
 
             setState({ 
@@ -1937,7 +2084,7 @@ C. noisy`;
                         ${modules.map(mod => `
                             <button onclick="window.changeModule('${mod.id}')" class="w-full text-left px-4 py-4 rounded-xl transition-all border-2 ${state.activeModule.id === mod.id ? 'bg-blue-50 border-blue-500 text-blue-800 font-bold shadow-sm' : 'border-transparent text-gray-600 hover:bg-gray-100'}">
                                 <div class="text-sm text-gray-400 font-medium mb-1">
-                                    ${mod.type === 'mcq' ? 'Trắc nghiệm' : mod.type === 'reorder' ? 'Sắp xếp (2 cột)' : mod.type === 'reading3' ? 'Matching' : mod.type === 'reading4' ? 'Dropdown Matching' : 'Listening + Dropdown'}
+                                    ${mod.type === 'mcq' ? 'Trắc nghiệm' : mod.type === 'reorder' ? 'Sắp xếp (2 cột)' : mod.type === 'reading3' ? 'Matching' : mod.type === 'reading4' ? 'Dropdown Matching' : mod.type === 'listening2' ? 'Listening + Dropdown' : 'Both/Man/Woman'}
                                 </div>
                                 ${mod.title}
                             </button>
@@ -1963,7 +2110,9 @@ C. noisy`;
                                     ? `Bài tập có ${state.questions.length} bộ đoạn văn matching. Hãy chọn Person A/B/C/D cho từng câu hỏi.`
                                     : state.activeModule.type === 'reading4'
                                         ? `Bài tập có ${state.questions.length} bộ bài Reading Part 4. Mỗi bộ gồm 7 đoạn, chọn đáp án phù hợp bằng dropdown trên từng đoạn.`
-                                        : `Bài nghe có ${state.questions.length} câu. Mỗi câu có 4 đoạn Speaker, bạn bấm nghe và chọn đáp án A/B/C/D cho từng đoạn.`}
+                                        : state.activeModule.type === 'listening2'
+                                            ? `Bài nghe có ${state.questions.length} câu. Mỗi câu có 4 đoạn Speaker, bạn bấm nghe và chọn đáp án A/B/C/D cho từng đoạn.`
+                                            : `Mỗi bộ gồm 4 nhận định. Chọn đáp án cho từng nhận định bằng dropdown: Both, Man, Woman.`}
                     </p>
                     <button onclick="window.startQuiz()" class="mt-8 px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-2xl shadow-lg hover:shadow-blue-500/30 transform hover:-translate-y-1 transition-all text-lg flex items-center gap-2">
                         Bắt đầu làm bài <i class="fa-solid fa-chevron-right"></i>
@@ -1980,13 +2129,16 @@ C. noisy`;
                         ? (state.reading4Current || state.questions[state.currentIndex])
                         : state.activeModule.type === 'listening2'
                             ? (state.listening2Current || state.questions[state.currentIndex])
+                            : state.activeModule.type === 'listeningbmw'
+                                ? (state.listeningBMWCurrent || state.questions[state.currentIndex])
                         : state.questions[state.currentIndex];
                 const isSubmitDisabled = 
                     (state.activeModule.type === 'mcq' && state.selectedOptionIndex === null) || 
                     (state.activeModule.type === 'reorder' && state.slottedItems.some(item => item === null)) ||
                     (state.activeModule.type === 'reading3' && Object.keys(state.dropdownAnswers).length < currentQ.questions.length) ||
                     (state.activeModule.type === 'reading4' && Object.keys(state.reading4Answers).length < currentQ.paragraphs.length) ||
-                    (state.activeModule.type === 'listening2' && Object.keys(state.listening2Answers).length < currentQ.speakers.length);
+                    (state.activeModule.type === 'listening2' && Object.keys(state.listening2Answers).length < currentQ.speakers.length) ||
+                    (state.activeModule.type === 'listeningbmw' && Object.keys(state.listeningBMWAnswers).length < currentQ.items.length);
 
                 let contentHTML = '';
                 
@@ -2280,10 +2432,50 @@ C. noisy`;
                             <div class="space-y-4">${speakerCardsHTML}</div>
                         </div>
                     `;
+                } else if (state.activeModule.type === 'listeningbmw') {
+                    const answerOptions = ['Both', 'Man', 'Woman'];
+                    const itemsHTML = currentQ.items.map((item, idx) => {
+                        const userAnswer = state.listeningBMWAnswers[idx] || '';
+                        let selectStyle = 'border-gray-300 text-gray-700 bg-white';
+                        let feedbackHTML = '';
+
+                        if (state.isAnswered) {
+                            if (userAnswer === item.answer) {
+                                selectStyle = 'border-green-500 bg-green-50 text-green-700 font-bold';
+                                feedbackHTML = '<span class="text-green-600 font-semibold">Đúng</span>';
+                            } else {
+                                selectStyle = 'border-red-500 bg-red-50 text-red-700';
+                                feedbackHTML = `<span class="text-red-600 font-semibold">Sai</span><span class="text-green-700 text-sm">Đáp án: ${item.answer}</span>`;
+                            }
+                        }
+
+                        return `
+                            <div class="bg-white border border-gray-200 rounded-2xl p-4">
+                                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+                                    <p class="text-gray-800 font-medium flex-1">
+                                        <span class="text-blue-700 font-bold mr-2">${idx + 1}.</span>${item.text}
+                                    </p>
+                                    <div class="flex items-center gap-3">
+                                        <select
+                                            ${state.isAnswered ? 'disabled' : ''}
+                                            onchange="window.selectListeningBMWOption(${idx}, this.value)"
+                                            class="px-4 py-2 border-2 rounded-lg outline-none cursor-pointer ${selectStyle}"
+                                        >
+                                            <option value="" disabled ${!userAnswer ? 'selected' : ''}>Chọn đáp án</option>
+                                            ${answerOptions.map(opt => `<option value="${opt}" ${userAnswer === opt ? 'selected' : ''}>${opt}</option>`).join('')}
+                                        </select>
+                                        <div class="flex items-center gap-2">${feedbackHTML}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+
+                    contentHTML = `<div class="space-y-4">${itemsHTML}</div>`;
                 }
 
                 quizHTML = `
-                    <div class="w-full ${state.activeModule.type === 'reorder' || state.activeModule.type === 'reading3' || state.activeModule.type === 'reading4' || state.activeModule.type === 'listening2' ? 'max-w-7xl' : 'max-w-5xl'} mx-auto flex flex-col h-full">
+                    <div class="w-full ${state.activeModule.type === 'reorder' || state.activeModule.type === 'reading3' || state.activeModule.type === 'reading4' || state.activeModule.type === 'listening2' || state.activeModule.type === 'listeningbmw' ? 'max-w-7xl' : 'max-w-5xl'} mx-auto flex flex-col h-full">
                         <div class="mb-6 shrink-0">
                             <div class="flex justify-between text-sm font-medium text-gray-500 mb-2">
                                 <span>Câu ${state.currentIndex + 1} / ${state.questions.length}</span>
@@ -2294,7 +2486,7 @@ C. noisy`;
                             </div>
                         </div>
 
-                        <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100 flex-grow flex flex-col ${state.activeModule.type === 'reading3' || state.activeModule.type === 'reading4' || state.activeModule.type === 'listening2' ? 'overflow-visible' : 'overflow-hidden'}">
+                        <div class="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100 flex-grow flex flex-col ${state.activeModule.type === 'reading3' || state.activeModule.type === 'reading4' || state.activeModule.type === 'listening2' || state.activeModule.type === 'listeningbmw' ? 'overflow-visible' : 'overflow-hidden'}">
                             <h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-6 leading-relaxed border-b pb-4 shrink-0">
                                 <span class="text-blue-600 mr-2">
                                     ${state.activeModule.type === 'mcq' ? `Q${currentQ.id}.` : `Đoạn ${currentQ.id}:`}
@@ -2368,7 +2560,7 @@ C. noisy`;
                             <h1 class="font-bold text-lg text-gray-800 hidden sm:block">Hệ thống Ôn Tập Tiếng Anh</h1>
                         </div>
                         <div class="text-sm font-medium text-blue-600 bg-blue-50 px-4 py-1.5 rounded-full border border-blue-100 flex items-center">
-                            ${state.activeModule.type === 'reorder' ? 'Sắp xếp (2 Cột)' : state.activeModule.type === 'reading3' ? 'Reading Part 3 (Matching)' : state.activeModule.type === 'reading4' ? 'Reading Part 4 (Dropdown Matching)' : state.activeModule.type === 'listening2' ? 'Listening Part 2 (Câu 14)' : 'Trắc nghiệm'}
+                            ${state.activeModule.type === 'reorder' ? 'Sắp xếp (2 Cột)' : state.activeModule.type === 'reading3' ? 'Reading Part 3 (Matching)' : state.activeModule.type === 'reading4' ? 'Reading Part 4 (Dropdown Matching)' : state.activeModule.type === 'listening2' ? 'Listening Part 2 (Câu 14)' : state.activeModule.type === 'listeningbmw' ? 'Listening 15 (Both/Man/Woman)' : 'Trắc nghiệm'}
                         </div>
                     </header>
                     <main id="app-main" class="flex-1 overflow-y-auto p-4 md:p-8 flex flex-col relative bg-[#f8fafc]">
