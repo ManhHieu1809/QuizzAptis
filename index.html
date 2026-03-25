@@ -1784,7 +1784,11 @@ Technology has changed how community forms: Both`;
             }
 
             if (state.activeModule.type === 'listeningbmw' && state.questions[index]) {
-                updates.listeningBMWCurrent = state.questions[index];
+                const q = state.questions[index];
+                updates.listeningBMWCurrent = {
+                    ...q,
+                    items: shuffleSimple(q.items)
+                };
             }
 
             setState(updates);
