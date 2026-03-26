@@ -1787,7 +1787,7 @@ Technology has changed how community forms: Both`;
                 const q = state.questions[index];
                 updates.listeningBMWCurrent = {
                     ...q,
-                    items: shuffleSimple(q.items)
+                    items: [...q.items]
                 };
             }
 
@@ -1797,7 +1797,10 @@ Technology has changed how community forms: Both`;
         // Đưa các hàm ra global (window) để gọi từ HTML nội tuyến
         window.changeModule = function(moduleId) {
             const mod = modules.find(m => m.id === moduleId);
-            const questions = mod.type === 'mcq' ? parseListening(mod.data) : mod.data;
+            let questions = mod.type === 'mcq' ? parseListening(mod.data) : mod.data;
+            if (mod.type === 'listeningbmw') {
+                questions = shuffleSimple(questions);
+            }
             if (window.speechSynthesis) window.speechSynthesis.cancel();
             setState({ activeModule: mod, questions: questions, appState: 'menu', isSidebarOpen: false, reading3Current: null, dropdownAnswers: {}, reading4Current: null, reading4Answers: {}, listening2Current: null, listening2Answers: {}, listeningBMWCurrent: null, listeningBMWAnswers: {} });
         };
@@ -1807,7 +1810,11 @@ Technology has changed how community forms: Both`;
         };
 
         window.startQuiz = function() {
-            setState({ appState: 'quiz', score: 0 });
+            const updates = { appState: 'quiz', score: 0 };
+            if (state.activeModule.type === 'listeningbmw') {
+                updates.questions = shuffleSimple(state.questions);
+            }
+            setState(updates);
             setupQuestion(0);
         };
 
